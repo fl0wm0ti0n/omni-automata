@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\actors">
+      <UniqueIdentifier>{0ebf8ab1-6aa8-470c-be4f-b4d20b049622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sensors">
+      <UniqueIdentifier>{d3c5f2fa-9b93-4c5d-acef-e254b874680d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\actors">
+      <UniqueIdentifier>{33c12b8a-d698-475f-8caf-f6b74e91d946}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sensors">
+      <UniqueIdentifier>{60317baf-2a47-440b-8713-ce917e86c2a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\misc">
+      <UniqueIdentifier>{7168e208-b87a-4056-84ad-67708ea302b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\misc">
+      <UniqueIdentifier>{fb0291db-a479-4197-9b80-386a45ac4891}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\main">
+      <UniqueIdentifier>{66c28e35-f95a-453d-82e9-956fef7efd9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\main">
+      <UniqueIdentifier>{d295a7ac-788f-4100-92c2-a5a0e7712be9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="__vm\.home_arduino.vsarduino.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="randomtemplight.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Streaming.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="actor.h">
+      <Filter>Header Files\actors</Filter>
+    </ClInclude>
+    <ClInclude Include="analogOut.h">
+      <Filter>Header Files\actors</Filter>
+    </ClInclude>
+    <ClInclude Include="digitalOut.h">
+      <Filter>Header Files\actors</Filter>
+    </ClInclude>
+    <ClInclude Include="doggle.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="analogIn.h">
+      <Filter>Header Files\sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="dhtSensor.h">
+      <Filter>Header Files\sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="gasSensor.h">
+      <Filter>Header Files\sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="motionSensor.h">
+      <Filter>Header Files\sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="sensor.h">
+      <Filter>Header Files\sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="touchSensor.h">
+      <Filter>Header Files\sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="constants.h">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="decisions.h">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="neopixel.h">
+      <Filter>Header Files\actors</Filter>
+    </ClInclude>
+    <ClInclude Include="__vm\.master-dev-branch.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="directionEncoder.h">
+      <Filter>Header Files\sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="pgmStrToRAM\pgmStrToRAM.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="pgmStrToRAM\MemoryFree.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="actor.cpp">
+      <Filter>Source Files\actors</Filter>
+    </ClCompile>
+    <ClCompile Include="analogOut.cpp">
+      <Filter>Source Files\actors</Filter>
+    </ClCompile>
+    <ClCompile Include="digitalOut.cpp">
+      <Filter>Source Files\actors</Filter>
+    </ClCompile>
+    <ClCompile Include="doggle.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="analogIn.cpp">
+      <Filter>Source Files\sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="dhtSensor.cpp">
+      <Filter>Source Files\sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="gasSensor.cpp">
+      <Filter>Source Files\sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="motionSensor.cpp">
+      <Filter>Source Files\sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="sensor.cpp">
+      <Filter>Source Files\sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="TouchSensor.cpp">
+      <Filter>Source Files\sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="logger.cpp">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="neopixel.cpp">
+      <Filter>Source Files\actors</Filter>
+    </ClCompile>
+    <ClCompile Include="decisions.cpp">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="directionEncoder.cpp">
+      <Filter>Source Files\sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="pgmStrToRAM\MemoryFree.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="pgmStrToRAM\pgmStrToRAM.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="home_arduino.ino" />
+  </ItemGroup>
+</Project>
