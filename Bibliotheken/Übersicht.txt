@@ -1,0 +1,5 @@
+Lib			Adresse											Info
+---------------------------------------------------------------------------------------------------------------------------------------------
+Streaming.h		http://arduiniana.org/libraries/streaming/						Erlaubt das aneinanderreihen von Text und Variableen mit zb "<<".
+AllEffects_FastLED.ino	https://www.tweaking4all.com/hardware/arduino/arduino-all-ledstrip-effects-in-one/	Viele Led effekte
+PinChangeInt.h		https://github.com/GreyGnome/PinChangeInt						macht es möglich mehr pins als Interrupt bin zu definieren
