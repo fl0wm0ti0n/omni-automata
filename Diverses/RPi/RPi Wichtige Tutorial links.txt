@@ -1,0 +1,9 @@
+Building Raspberry PI apps from Windows --> http://gnutoolchains.com/raspberry/tutorial/
+Using a Cross-compiler for Raspberry PI --> http://visualgdb.com/tutorials/raspberry/crosscompiler/
+RPi2 lib Updaten --> http://gnutoolchains.com/raspberry/tutorial/sysroot
+Using WiringPi library with Raspberry PI cross-compiler --> http://visualgdb.com/tutorials/raspberry/wiringPi/
+
+
+..............
+C:\SysGCC\raspberry\arm-linux-gnueabihf\sysroot\usr\local\include
+wiringPi pthread
