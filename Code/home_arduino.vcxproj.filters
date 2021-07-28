@@ -42,9 +42,6 @@
     <ClInclude Include="__vm\.home_arduino.vsarduino.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="__vm\.testing.vsarduino.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="randomtemplight.h">
       <Filter>Header Files\misc</Filter>
     </ClInclude>
@@ -94,6 +91,12 @@
       <Filter>Header Files\actors</Filter>
     </ClInclude>
     <ClInclude Include="directionEncoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="__vm\.nodemcu-dev-branch.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="__vm\.Code.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
