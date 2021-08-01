@@ -181,7 +181,7 @@ int decisions::lichtAnSolangeInputImpulsAn(bool o_sensor, logger &log)
 	// Impuls effect
 	// Mit Motionsensor justierbar
 	// Mainloop und millis abhängig (nichts muss auf diesen Prozess warten)
-	void decisions::lichtAnSolangeInputImpulsAn(sensor o_sensor, actor o_actor, logger &log)
+	void decisions::lichtAnSolangeInputImpulsAn(Sensor o_sensor, actor o_actor, logger &log)
 	{
 
 		log.writeLog("Call - lichtAnSolangeInputImpulsAn", extremedebug);
@@ -215,7 +215,7 @@ int decisions::lichtAnSolangeInputImpulsAn(bool o_sensor, logger &log)
 	// Wenn Bewegung "light up" bis volle Stärke - erst danach "light off"
 	// NICHT mit Motionsensor justierbar
 	// Mainloop und millis abhängig (nichts muss auf diesen Prozess warten)
-	void decisions::LichtAnSolangeInputImpulsAn_AusErlaubtNach255(sensor o_sensor, actor o_actor, logger &log)
+	void decisions::LichtAnSolangeInputImpulsAn_AusErlaubtNach255(Sensor o_sensor, actor o_actor, logger &log)
 	{
 		log.writeLog("Call - LichtAnSolangeInputImpulsAn_AusErlaubtNach255", extremedebug);
 

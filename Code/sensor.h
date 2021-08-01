@@ -1,4 +1,4 @@
-// @file      sensor.h
+// @file      Sensor.h
 // @author    flow@p0cki.net
 // @date      01.2017
 // @brief     baseclass of all sensors
@@ -24,7 +24,7 @@ enum t_sensor_type
 	gas_sens = 5
 };
 
-class sensor
+class Sensor
 {
 
 private:
@@ -34,8 +34,8 @@ private:
 	unsigned short sensorpin_;
 
 public:
-	sensor(t_sensor_type t, char n[], unsigned short p);
-	virtual ~sensor();
+	Sensor(t_sensor_type t, char n[], unsigned short p);
+	virtual ~Sensor();
 
 	virtual t_sensor_type getType()
 	{return sensortype_;}

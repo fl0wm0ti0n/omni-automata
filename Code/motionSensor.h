@@ -1,4 +1,4 @@
-// Motionsensor_one.h
+// Motionsensor.h
 
 #ifndef _HOME_MOTION_h
 #define _HOME_MOTION_h
@@ -9,21 +9,21 @@
 	#include "WProgram.h"
 #endif
 
-#include "sensor.h"
+#include "Sensor.h"
 #include "logger.h"
 
-class motionSensor :public sensor
+class MotionSensor :public Sensor
 {
 private:
-	byte iMotionState = 0;
-	bool iMotionValue = false;
+	byte motion_state_ = 0;
+	bool motion_value_ = false;
 
 public:
-	motionSensor(char n[], int p);		// Constructor
-	virtual ~motionSensor();				// Destructor
+	MotionSensor(char n[], int p);		// Constructor
+	virtual ~MotionSensor();				// Destructor
 
 	virtual bool getValue();		// Method: get motion Value
-	bool trueIfStatusChanged();
+	bool true_if_status_changed();
 };
 
 #endif

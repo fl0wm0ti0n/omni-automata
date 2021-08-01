@@ -2,47 +2,100 @@
 // 
 // 
 
-#include "gasSensor.h"
+#include "GasSensor.h"
 
-gasSensor::gasSensor(String n, int p)
-	:sensor(t_sensor_type::analogIn_sens, n, p)
+GasSensor::GasSensor(char n[], int p)
+	:Sensor(t_sensor_type::analogIn_sens, n, p)
 {
-	sensor::getValue(analogRead(p));
+#ifdef DEBUG
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+#endif
+	Sensor::getValue();
 	setPin(p);
 }
 
-gasSensor::~gasSensor()
+GasSensor::~GasSensor()
 = default;
 
-int gasSensor::setPin(int iPin)
+int GasSensor::setPin(int iPin)
 {
-	iPinNum = iPin;
-	pinMode(iPinNum, INPUT);
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - CO.setPin";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
+	pin_num_ = iPin;
+	pinMode(pin_num_, INPUT);
 }
 
-int gasSensor::getRawValue()
+int GasSensor::getRawValue()
 {
-	iAnalogValue = analogRead(iPinNum);
-	return iAnalogValue;
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - CO.getRawValue";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
+	analog_value_ = analogRead(pin_num_);
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= sensordata)
+	{
+		static const char* const buffer PROGMEM = "analog_value_ = ";
+		logger_g_->LnWriteLog(buffer, sensordata);
+		logger_g_->WriteLog(analog_value_, sensordata);
+	}
+#endif
+	return analog_value_;
 }
 
-float gasSensor::getCO2Value()
+float GasSensor::getCO2Value()
 {
-	sensorValue = getRawValue();
-	sensorResistance = (1023. / (float)sensorValue * 5. - 1.)*RLOAD;
-
-	value = PARA * pow(sensorResistance / RZERO, -PARB);
-	return value;
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - CO.getCO2Value";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
+	sensor_value_ = getRawValue();
+	sensor_resistance_ = (1023. / (float)sensor_value_ * 5. - 1.) * RLOAD;
+	value_ = PARA * pow(sensor_resistance_ / RZERO, -PARB);
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= sensordata)
+	{
+		static const char* const buffer PROGMEM = "value_ = ";
+		logger_g_->LnWriteLog(buffer, sensordata);
+		logger_g_->WriteLog(value_, sensordata);
+	}
+#endif
+	return value_;
 }
 
-float gasSensor::getCOValue()
+float GasSensor::getCOValue()
 {
-	sensorValue = getRawValue();
-
-	v_out = (float)sensorValue * (v_in / 1023.0);
-	vRatio = (v_in - v_out) / v_out;
-	sensorResistance = R_Load * vRatio;
-	value = (float)(coefficient_A * pow(vRatio, coefficient_B));
-
-	return value;
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - CO.getCO2Value";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
+	sensor_value_ = getRawValue();
+	v_out_ = (float)sensor_value_ * (v_in / 1023.0);
+	v_ratio_ = (v_in - v_out_) / v_out_;
+	sensor_resistance_ = R_Load * v_ratio_;
+	value_ = (float)(coefficient_A * pow(v_ratio_, coefficient_B));
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= sensordata)
+	{
+		static const char* const buffer PROGMEM = "value_ = ";
+		logger_g_->LnWriteLog(buffer, sensordata);
+		logger_g_->WriteLog(value_, sensordata);
+	}
+#endif
+	return value_;
 }

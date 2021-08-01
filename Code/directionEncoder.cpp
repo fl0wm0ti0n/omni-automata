@@ -1,7 +1,7 @@
-#include "directionEncoder.h"
+#include "DirectionEncoder.h"
 
-directionEncoder::directionEncoder(char n[], int pSW, int pCLK, int pDT)
-	:sensor(digitalIn_sens, n, pSW)
+DirectionEncoder::DirectionEncoder(char n[], int pSW, int pCLK, int pDT)
+	:Sensor(digitalIn_sens, n, pSW)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";
@@ -13,30 +13,30 @@ directionEncoder::directionEncoder(char n[], int pSW, int pCLK, int pDT)
 	pinMode(pinCLK_, INPUT);
 	pinMode(pinDT_, INPUT);
 	pinMode(pinSW_, INPUT);
-	oldCLKVal_ = digitalRead(pinCLK_);
+	old_clk_val_ = digitalRead(pinCLK_);
 }
 
-directionEncoder::~directionEncoder()
+DirectionEncoder::~DirectionEncoder()
 = default;
 
-int directionEncoder::getEncoderValue()
+int DirectionEncoder::getEncoderValue()
 {
 #ifdef DEBUG
 	static const char* const buffer PROGMEM = "Call - GetEncoder";
 	logger_g_->LnWriteLog(buffer, extremedebug);
 #endif
-	CLKVal_ = digitalRead(pinCLK_);
-	if (CLKVal_ != oldCLKVal_) { // Means the knob is rotating
+	clk_val_ = digitalRead(pinCLK_);
+	if (clk_val_ != old_clk_val_) { // Means the knob is rotating
 	  // if the knob is rotating, we need to determine direction
 	  // We do that by reading pin B.
 
-		if (digitalRead(pinDT_) != CLKVal_) {  // Means pin A Changed first - We're Rotating Clockwise
-			encoderPosCount_ = encoderPosCount_ + clicks_;
+		if (digitalRead(pinDT_) != clk_val_) {  // Means pin A Changed first - We're Rotating Clockwise
+			encoder_pos_count_ = encoder_pos_count_ + clicks_;
 			bCW_ = true;
 		}
 		else {// Otherwise B changed first and we're moving CCW
 			bCW_ = false;
-			encoderPosCount_ = encoderPosCount_ - clicks_;
+			encoder_pos_count_ = encoder_pos_count_ - clicks_;
 		}
 #ifdef DEBUG
 		static const char* const buffer PROGMEM = "Rotated ";
@@ -51,7 +51,7 @@ int directionEncoder::getEncoderValue()
 #endif
 
 			turn_ = -1;
-			if (oldTurn_ == turn_)
+			if (old_turn_ == turn_)
 			{
 				turn_ = 0;
 			}
@@ -63,7 +63,7 @@ int directionEncoder::getEncoderValue()
 #endif
 
 			turn_ = 1;
-			if (oldTurn_ == turn_)
+			if (old_turn_ == turn_)
 			{
 				turn_ = 0;
 			}
@@ -82,12 +82,12 @@ int directionEncoder::getEncoderValue()
 	{
 		turn_ = 0;
 	}
-	oldCLKVal_ = CLKVal_;
-	oldTurn_ = turn_;
+	old_clk_val_ = clk_val_;
+	old_turn_ = turn_;
 	return  turn_;
 }
 
-bool directionEncoder::getValue()
+bool DirectionEncoder::getValue()
 {
 #ifdef DEBUG
 	static const char* const buffer PROGMEM = "Call - EnSwitch";
@@ -101,7 +101,7 @@ bool directionEncoder::getValue()
 		logger_g_->LnWriteLog(buffer, sensordata);
 #endif
 
-		bSwitchState_ = true;
+		switch_state_ = true;
 	}
 	else
 	{
@@ -110,12 +110,12 @@ bool directionEncoder::getValue()
 		logger_g_->LnWriteLog(buffer, sensordata);
 #endif
 
-		bSwitchState_ = false;
+		switch_state_ = false;
 	}
-	return bSwitchState_;
+	return switch_state_;
 }
 
-bool directionEncoder::getSwitchValueDoggle()
+bool DirectionEncoder::getSwitchValueDoggle()
 {
 #ifdef DEBUG
 	static const char* const buffer PROGMEM = "Call - EnSwitchDoggle";
@@ -124,17 +124,17 @@ bool directionEncoder::getSwitchValueDoggle()
 
 	if (digitalRead(getPin()))
 	{
-		bdoggleState_ = !bdoggleState_;
+		doggle_state_ = !doggle_state_;
 #ifdef DEBUG
 		static const char* const buffer PROGMEM = "Doggled";
 		logger_g_->LnWriteLog(buffer, sensordata);
 #endif
 
 	}
-	return bdoggleState_;
+	return doggle_state_;
 }
 
-bool directionEncoder::getSwitchLongValue()
+bool DirectionEncoder::getSwitchLongValue()
 {
 #ifdef DEBUG
 	static const char* const buffer PROGMEM = "Call - getSwitchLongValue";
@@ -142,24 +142,24 @@ bool directionEncoder::getSwitchLongValue()
 #endif
 
 
-	if (digitalRead(getPin()) == LOW && iSwitchState_ != 0)
+	if (digitalRead(getPin()) == LOW && switch_state2_ != false)
 	{
-		iSwitchState_ = 0;
-		iSwitchValue_ = true;
+		switch_state2_ = false;
+		switch_value_ = true;
 #ifdef DEBUG
 		static const char* const buffer PROGMEM = "Switch is true";
 		logger_g_->LnWriteLog(buffer, sensordata);
 #endif
 	}
 
-	if (digitalRead(getPin()) == HIGH && iSwitchState_ != 1)
+	if (digitalRead(getPin()) == HIGH && switch_state2_ != true)
 	{
-		iSwitchState_ = 1;
-		iSwitchValue_ = false;
+		switch_state2_ = true;
+		switch_value_ = false;
 #ifdef DEBUG
 		static const char* const buffer PROGMEM = "Switch is false";
 		logger_g_->LnWriteLog(buffer, sensordata);
 #endif
 	}
-	return iSwitchValue_;
+	return switch_value_;
 }

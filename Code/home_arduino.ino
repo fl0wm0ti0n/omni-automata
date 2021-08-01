@@ -13,13 +13,13 @@
 
 #include "FastLED.h"
 #include <DHT.h>
-#include "motionSensor.h"
+#include "MotionSensor.h"
 #include "analogOut.h"
-#include "dhtSensor.h"
+#include "DhtSensor.h"
 #include "logger.h"
 #include "decisions.h"
 #include "neopixel.h"
-#include "directionEncoder.h"
+#include "DirectionEncoder.h"
 #include "PinChangeInt.h"
 #include "pgmStrToRAM/MemoryFree.h"
 #include "pgmStrToRAM/pgmStrToRAM.h"
@@ -31,11 +31,11 @@
 logger* Logging_one = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, "Logging1");
 analogOut LightStripe_one("lightstripe 1", PIN_PWM_1);
 neopixel WS2812Stripe("WS2812", PIN_WS2812_1, NUM_LEDS_1);
-motionSensor Motionsensor_one("motionsensor 1", PIN_MOTION_1);
-dhtSensor DHTSensor_one("dhtsensor 1", PIN_HUM_1);
+MotionSensor Motionsensor_one("motionsensor 1", PIN_MOTION_1);
+DhtSensor DHTSensor_one("dhtsensor 1", PIN_HUM_1);
 //decisions LightUpStripe(lightOn,"LichtAnAus");
 decisions ChangeColor(colorChange, "FarbeNachTemp");
-directionEncoder encoder_one("RichtungsEncoder", PIN_ENCODER_SW, PIN_ENCODER_CLK, PIN_ENCODER_DT);
+DirectionEncoder encoder_one("RichtungsEncoder", PIN_ENCODER_SW, PIN_ENCODER_CLK, PIN_ENCODER_DT);
 
 // Variablen deklarieren in denen die Startzeiten
 // der einzelnen Zeitfunktionen gespeichert werden

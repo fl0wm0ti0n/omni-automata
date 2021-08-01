@@ -1,7 +1,7 @@
 // @file           touchSensor.h
 // @author         flow@p0cki.at
 // @date           11.2016
-// @brief          touch sensor Values
+// @brief          touch Sensor Values
 
 #ifndef _HOME_TOUCH_h
 #define _HOME_TOUCH_h
@@ -12,7 +12,7 @@
 	#include "WProgram.h"
 #endif
 
-#include "sensor.h"
+#include "Sensor.h"
 #include "constants.h"
 
 
@@ -25,27 +25,28 @@ enum t_analog_or_bool
 
 };
 
-class touchSensor :public sensor
+class TouchSensor : public Sensor
 {
 	private:
-		int		iDigitalValue = 0;
-		float	fAnalogValue = 0;
-		bool	bTouchState = false;
-		float	fThreshold = DEFAULT_THRESHOLD;
-
+		int		digital_value_ = 0;
+		float	analog_value_ = 0;
+		bool	touch_state_ = false;
+		float	threshold_ = DEFAULT_THRESHOLD;
+		logger* logger_g_;
+	
 	public:
-				touchSensor(String n, int p);												// Constructor
-		virtual ~touchSensor();																// Destructor
+				TouchSensor(char n[], int p);						// Constructor
+		virtual ~TouchSensor();										// Destructor
 
-		float	getAnalog(t_analog_or_bool tswitch, logger &logging_one);					// Method: get Touch Analog Value - Gibt True/False oder einen analogen Wert zurück
-		float	getAnalogWithDoggle(t_analog_or_bool tswitch, logger &logging_one);		// Method: get Touch Analog Value - Gibt True/False oder einen analogen Wert zurück, aber immer gedoggelt.
-		bool	getState(logger &logging_one);											// Method: get Touch Value - Gibt True oder False zurück
-		bool	getStateWithDoggle(logger &logging_one);									// Method: get Touch Value - Gibt True oder False zurück, aber immer gedoggelt.
-		void	setAnalogTreshold(float threshold, logger &logging_one);					// Method: set Analog Treshold - Setzt den Grenzwert ab wann Analog als True gewertet wird.
-		float	getAnalogTreshold(logger &logging_one)									// Method: get Analog Treshold - Liest den Grenzwert aus.
+		float	getAnalog(t_analog_or_bool tswitch);				// Method: get Touch Analog Value - Gibt True/False oder einen analogen Wert zurück
+		float	getAnalogWithDoggle(t_analog_or_bool tswitch);		// Method: get Touch Analog Value - Gibt True/False oder einen analogen Wert zurück, aber immer gedoggelt.
+		bool	getState();											// Method: get Touch Value - Gibt True oder False zurück
+		bool	getStateWithDoggle();								// Method: get Touch Value - Gibt True oder False zurück, aber immer gedoggelt.
+		void	setAnalogTreshold(float threshold);					// Method: set Analog Treshold - Setzt den Grenzwert ab wann Analog als True gewertet wird.
+		float	getAnalogTreshold()									// Method: get Analog Treshold - Liest den Grenzwert aus.
 		{
 			logging_one.writeLog("Call - touch - getAnalogTreshold", extremedebug);
-			return fThreshold;
+			return threshold_;
 		};
 };
 #endif

@@ -9,24 +9,25 @@
 #include "WProgram.h"
 #endif
 
-#include "sensor.h"
+#include "Sensor.h"
 #include <DHT.h>
 #include "logger.h"
 
-class dhtSensor :public sensor
+class DhtSensor :public Sensor
 {
-	float temp;
-	float hum;
-	float savetemp;
-	float savehum;
-	DHT dht = DHT(getPin(),DHT22);
+	float temp_;
+	float hum_;
+	float savetemp_;
+	float savehum_;
+	DHT dht_ = DHT(getPin(),DHT22);
+	logger* logger_g_;
 
 public:
-		dhtSensor(String n, int p);									// Constructor
-		virtual ~dhtSensor();										// Destructor
-		float getTempValue(logger &logging_one);					// Method: get Value
-		float getHumValue(logger &logging_one);						// Method: get Value
-		float getTempValueOnlyIfChanged(logger &logging_one);		// Method: get Value
-		float getHumValueOnlyIfChanged(logger &logging_one);		// Method: get Value
+		DhtSensor(char n[], int p);				// Constructor
+		virtual ~DhtSensor();					// Destructor
+		float getTempValue();					// Method: get Value
+		float getHumValue();					// Method: get Value
+		float getTempValueOnlyIfChanged();		// Method: get Value
+		float getHumValueOnlyIfChanged();		// Method: get Value
 };
 #endif

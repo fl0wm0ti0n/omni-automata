@@ -1,12 +1,12 @@
 // @file      analogIn.cpp
 // @author    flow@p0cki.net
 // @date      08.2019
-// @brief     childclass of sensor
+// @brief     childclass of Sensor
 
-#include "analogIn.h"
+#include "AnalogIn.h"
 
-analogIn::analogIn(char n[], unsigned short p)
-	:sensor(analogIn_sens, n, p)
+AnalogIn::AnalogIn(char n[], unsigned short p)
+	:Sensor(analogIn_sens, n, p)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";
@@ -15,16 +15,16 @@ analogIn::analogIn(char n[], unsigned short p)
 	setPin(p);
 }
 
-analogIn::~analogIn()
+AnalogIn::~AnalogIn()
 = default;
 
-unsigned short analogIn::getAnalogValue()
+unsigned short AnalogIn::getAnalogValue()
 {
 #ifdef DEBUG
 	static const char* const buffer PROGMEM = "Call - analogIn.getValue";
 	logger_g_->WriteLog(buffer, extremedebug);
 #endif
 
-	iAnalogValue = analogRead(iPinNum);
-	return iAnalogValue;
+	analog_value_ = analogRead(pin_num_);
+	return analog_value_;
 }

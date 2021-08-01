@@ -1,7 +1,7 @@
-#include "digitalIn.h"
+#include "DigitalIn.h"
 
-digitalIn::digitalIn(char n[], unsigned short p)
-	:sensor(digitalIn_sens, n, p)
+DigitalIn::DigitalIn(char n[], unsigned short p)
+	:Sensor(digitalIn_sens, n, p)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";
@@ -11,10 +11,10 @@ digitalIn::digitalIn(char n[], unsigned short p)
 	set_debounce_interval(DEFAULT_DEBOUNCE);
 }
 
-digitalIn::~digitalIn()
+DigitalIn::~DigitalIn()
 = default;
 
- bool digitalIn::setPin(unsigned short p)
+ bool DigitalIn::setPin(unsigned short p)
 {
 	 input_ = Bounce();
 	 input_.attach(p, INPUT_PULLUP);
@@ -22,17 +22,17 @@ digitalIn::~digitalIn()
 	return true;
 }
 
- void digitalIn::update_debounce()
+ void DigitalIn::update_debounce()
  {
 	 input_.update();
  }
 
- void digitalIn::set_debounce_interval(unsigned short interval)
+ void DigitalIn::set_debounce_interval(unsigned short interval)
  {
 	 input_.interval(interval);
  }
 
-bool digitalIn::getValue()
+bool DigitalIn::getValue()
 {
 #ifdef DEBUG
 	static const char* const buffer PROGMEM = "Call - digitalIn.getValue";
@@ -46,7 +46,7 @@ bool digitalIn::getValue()
 		static const char* const buffer PROGMEM = "Switch: is true";
 		logger_g_->LnWriteLog(buffer, sensordata);
 #endif
-		bSwitchState_ = true;
+		b_switch_state_ = true;
 	}
 	else
 	{
@@ -56,12 +56,12 @@ bool digitalIn::getValue()
 		static const char* const buffer PROGMEM = "Switch: is false";
 		logger_g_->LnWriteLog(buffer, sensordata);
 #endif
-		bSwitchState_ = false;
+		b_switch_state_ = false;
 	}
-	return bSwitchState_;
+	return b_switch_state_;
 }
 
-bool digitalIn::getFell()
+bool DigitalIn::getFell()
 {
 #ifdef DEBUG
 	static const char* const buffer PROGMEM = "Call - digitalIn.getFell";
@@ -70,7 +70,7 @@ bool digitalIn::getFell()
 	return input_.fell();
 }
 
-bool digitalIn::getRose()
+bool DigitalIn::getRose()
 {
 #ifdef DEBUG
 	static const char* const buffer PROGMEM = "Call - digitalIn.getRose";
@@ -79,7 +79,7 @@ bool digitalIn::getRose()
 	return input_.rose();
 }
 
-bool digitalIn::getChanged()
+bool DigitalIn::getChanged()
 {
 #ifdef DEBUG
 	static const char* const buffer PROGMEM = "Call - digitalIn.getChanged";

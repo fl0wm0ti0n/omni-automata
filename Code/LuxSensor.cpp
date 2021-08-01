@@ -6,7 +6,7 @@
  */
 
 #include <stdlib.h>
-#include "sensor_lux.h"
+#include "LuxSensor.h"
 #include <math.h>
 
 

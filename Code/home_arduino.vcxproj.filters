@@ -61,28 +61,28 @@
     <ClInclude Include="randomtemplight.h">
       <Filter>Files\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="analogIn.h">
+    <ClInclude Include="AnalogIn.h">
       <Filter>Files\InOut\sensors</Filter>
     </ClInclude>
-    <ClInclude Include="dhtSensor.h">
+    <ClInclude Include="DhtSensor.h">
       <Filter>Files\InOut\sensors</Filter>
     </ClInclude>
-    <ClInclude Include="digitalIn.h">
+    <ClInclude Include="DigitalIn.h">
       <Filter>Files\InOut\sensors</Filter>
     </ClInclude>
-    <ClInclude Include="directionEncoder.h">
+    <ClInclude Include="DirectionEncoder.h">
       <Filter>Files\InOut\sensors</Filter>
     </ClInclude>
-    <ClInclude Include="gasSensor.h">
+    <ClInclude Include="GasSensor.h">
       <Filter>Files\InOut\sensors</Filter>
     </ClInclude>
-    <ClInclude Include="motionSensor.h">
+    <ClInclude Include="MotionSensor.h">
       <Filter>Files\InOut\sensors</Filter>
     </ClInclude>
-    <ClInclude Include="sensor.h">
+    <ClInclude Include="Sensor.h">
       <Filter>Files\InOut\sensors</Filter>
     </ClInclude>
-    <ClInclude Include="touchSensor.h">
+    <ClInclude Include="TouchSensor.h">
       <Filter>Files\InOut\sensors</Filter>
     </ClInclude>
     <ClInclude Include="list.h">
@@ -91,16 +91,13 @@
     <ClInclude Include="vector.h">
       <Filter>Files\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="home_logger.h">
-      <Filter>Files\Main</Filter>
-    </ClInclude>
     <ClInclude Include="PinChangeInt.h">
       <Filter>Files\Misc</Filter>
     </ClInclude>
     <ClInclude Include="MemoryInfo.h">
       <Filter>Files\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="sensor_lux.h">
+    <ClInclude Include="LuxSensor.h">
       <Filter>Files\InOut\sensors</Filter>
     </ClInclude>
     <ClInclude Include="RGBLed.h">
@@ -132,19 +129,19 @@
     <ClCompile Include="doggle.cpp">
       <Filter>Files\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="analogIn.cpp">
+    <ClCompile Include="AnalogIn.cpp">
       <Filter>Files\InOut\sensors</Filter>
     </ClCompile>
-    <ClCompile Include="dhtSensor.cpp">
+    <ClCompile Include="DhtSensor.cpp">
       <Filter>Files\InOut\sensors</Filter>
     </ClCompile>
-    <ClCompile Include="gasSensor.cpp">
+    <ClCompile Include="GasSensor.cpp">
       <Filter>Files\InOut\sensors</Filter>
     </ClCompile>
-    <ClCompile Include="motionSensor.cpp">
+    <ClCompile Include="MotionSensor.cpp">
       <Filter>Files\InOut\sensors</Filter>
     </ClCompile>
-    <ClCompile Include="sensor.cpp">
+    <ClCompile Include="Sensor.cpp">
       <Filter>Files\InOut\sensors</Filter>
     </ClCompile>
     <ClCompile Include="TouchSensor.cpp">
@@ -156,7 +153,7 @@
     <ClCompile Include="neopixel.cpp">
       <Filter>Files\InOut\actors</Filter>
     </ClCompile>
-    <ClCompile Include="directionEncoder.cpp">
+    <ClCompile Include="DirectionEncoder.cpp">
       <Filter>Files\InOut\sensors</Filter>
     </ClCompile>
     <ClCompile Include="pgmStrToRAM\MemoryFree.cpp">
@@ -165,17 +162,14 @@
     <ClCompile Include="pgmStrToRAM\pgmStrToRAM.cpp">
       <Filter>Files\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="digitalIn.cpp">
+    <ClCompile Include="DigitalIn.cpp">
       <Filter>Files\InOut\sensors</Filter>
     </ClCompile>
     <ClCompile Include="RGBLed.cpp">
       <Filter>Files\InOut\actors</Filter>
     </ClCompile>
-    <ClCompile Include="sensor_lux.cpp">
+    <ClCompile Include="LuxSensor.cpp">
       <Filter>Files\InOut\sensors</Filter>
-    </ClCompile>
-    <ClCompile Include="home_logger.cpp">
-      <Filter>Files\Main</Filter>
     </ClCompile>
     <ClCompile Include="decisions.cpp">
       <Filter>Files\Controller</Filter>

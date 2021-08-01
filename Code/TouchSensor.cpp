@@ -1,109 +1,172 @@
 // @file           home_touch.cpp
 // @author         flow@p0cki.at
 // @date           11.2016
-// @brief          touch sensor Values
+// @brief          touch Sensor Values
 
-#include "touchSensor.h"
+#include "TouchSensor.h"
 
-touchSensor::touchSensor(String n, int p)
-	:sensor(digitalIn_sens, n, p)
+TouchSensor::TouchSensor(char n[], int p)
+	:Sensor(digitalIn_sens, n, p)
 {
-
+#ifdef DEBUG
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+#endif
 }
 
-touchSensor::~touchSensor()
+TouchSensor::~TouchSensor()
 = default;
 
 // Gibt den Status des Sensors als Boolean zurück.
-bool touchSensor::getState(logger &log)
+bool TouchSensor::getState()
 {
-	log.writeLog(F("Call - touch - getState"), extremedebug);
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - touch - getState";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
 	if (digitalRead(getPin()) == HIGH)
 	{
-		log.writeLog("Touch: is true", sensordata);
-		bTouchState = true;
+		touch_state_ = true;
 	}
 	else
 	{
-		log.writeLog("Touch: is false", sensordata);
-		bTouchState = false;
+		touch_state_ = false;
 	}
-	return bTouchState;
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= sensordata)
+	{
+		static const char* const buffer PROGMEM = "Touch is ";
+		logger_g_->LnWriteLog(buffer, sensordata);
+		logger_g_->WriteLog(touch_state_, sensordata);
+	}
+#endif
+	return touch_state_;
 }
 
 // Wechselt, wenn sich der Status des Sensors geändert hat. den Boolean als Doggle zwischen True und False und gibt den gewechselten Status als Boolean zurück.
-bool touchSensor::getStateWithDoggle(logger &log)
+bool TouchSensor::getStateWithDoggle()
 {
-	log.writeLog(F("Call - touch - getStateWithDoggle"), extremedebug);
-	if (digitalRead(getPin()) == HIGH && iDigitalValue != 0)
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
 	{
-		log.writeLog("Touch: is false", sensordata);
-		iDigitalValue	= 0;
-		bTouchState		= false;
+		static const char* const buffer PROGMEM = "Call - touch - getStateWithDoggle";
+		logger_g_->LnWriteLog(buffer, extremedebug);
 	}
-	if (digitalRead(getPin()) == HIGH && iDigitalValue != 1)
+#endif
+	if (digitalRead(getPin()) == HIGH && digital_value_ != 0)
 	{
-		log.writeLog("Touch: is true", sensordata);
-		iDigitalValue	= 1;
-		bTouchState		= true;
+		digital_value_	= 0;
+		touch_state_		= false;
 	}
-	return bTouchState; 
+	if (digitalRead(getPin()) == HIGH && digital_value_ != 1)
+	{
+		digital_value_	= 1;
+		touch_state_		= true;
+	}
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= sensordata)
+	{
+		static const char* const buffer PROGMEM = "Touch is ";
+		logger_g_->LnWriteLog(buffer, sensordata);
+		logger_g_->WriteLog(touch_state_, sensordata);
+	}
+#endif
+	return touch_state_; 
 }
 
 // Gibt den analogen Wert des Sensors zurück.
-float touchSensor::getAnalog(t_analog_or_bool tswitch, logger &log)
+float TouchSensor::getAnalog(t_analog_or_bool tswitch)
 {
-
-	log.writeLog(F("Call - touch - getAnalog"), extremedebug);
-	fAnalogValue = analogRead(getPin());
-
-	if (fAnalogValue >= fThreshold)
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
 	{
-		bTouchState = true;
+		static const char* const buffer PROGMEM = "Call - touch - getAnalog";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
+	analog_value_ = analogRead(getPin());
+
+	if (analog_value_ >= threshold_)
+	{
+		touch_state_ = true;
 	}
 	else
 	{;
-		bTouchState = false;
+		touch_state_ = false;
 	}
 
 	// Schalter ob boolean oder Analog zurückgegeben wird.
 	if (tswitch == booleanReturn)
 	{
-		return bTouchState;
+		return touch_state_;
 	}
-	log.writeLog("Touch: Analoger Wert = " + String(fAnalogValue), sensordata);
-	return fAnalogValue;
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= sensordata)
+	{
+		static const char* const buffer PROGMEM = "Touch: AnalogValue = ";
+		logger_g_->LnWriteLog(buffer, sensordata);
+		logger_g_->WriteLog(analog_value_, sensordata);
+	}
+#endif
+	return analog_value_;
 }
 
 // Wechselt, wenn sich der Status des Sensors geändert hat. den Boolean als Doggle zwischen True und False und gibt den gewechselten Status als Boolean zurück.
-float touchSensor::getAnalogWithDoggle(t_analog_or_bool tswitch, logger &log)
+float TouchSensor::getAnalogWithDoggle(t_analog_or_bool tswitch)
 {
-	log.writeLog(F("Call - touch - getAnalogWithDoggle"), extremedebug);
-	fAnalogValue = analogRead(getPin());
-	if (fAnalogValue >= fThreshold && iDigitalValue != 0)
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
 	{
-		iDigitalValue	= 0;
-		bTouchState		= false;
-		log.writeLog("Touch: is false", sensordata);
+		static const char* const buffer PROGMEM = "Call - touch - getAnalogWithDoggle";
+		logger_g_->LnWriteLog(buffer, extremedebug);
 	}
-	if (fAnalogValue >= fThreshold && iDigitalValue != 1)
+#endif
+	analog_value_ = analogRead(getPin());
+	if (analog_value_ >= threshold_ && digital_value_ != 0)
 	{
-		iDigitalValue	= 1;
-		bTouchState		= true;
-		log.writeLog("Touch: is true", sensordata);
+		digital_value_	= 0;
+		touch_state_		= false;
 	}
-
+	if (analog_value_ >= threshold_ && digital_value_ != 1)
+	{
+		digital_value_	= 1;
+		touch_state_		= true;
+	}
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= sensordata)
+	{
+		static const char* const buffer PROGMEM = "Touch is ";
+		logger_g_->LnWriteLog(buffer, sensordata);
+		logger_g_->WriteLog(touch_state_, sensordata);
+	}
+#endif
 	// Schalter ob boolean oder Analog zurückgegeben wird.
 	if (tswitch == booleanReturn)
 	{
-		return bTouchState;
+		return touch_state_;
 	}
-	log.writeLog("Touch: Analoger Wert = " + String(fAnalogValue), sensordata);
-	return fAnalogValue;
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= sensordata)
+	{
+		static const char* const buffer PROGMEM = "Touch: AnalogValue = ";
+		logger_g_->LnWriteLog(buffer, sensordata);
+		logger_g_->WriteLog(analog_value_, sensordata);
+	}
+#endif
+	return analog_value_;
 }
 
-void touchSensor::setAnalogTreshold(float threshold, logger &log)
+void TouchSensor::setAnalogTreshold(float threshold)
 {
-	log.writeLog(F("Call - touch - setAnalogTreshold"), extremedebug);
-	fThreshold = threshold;
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - touch - setAnalogTreshold";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
+	threshold_ = threshold;
 }

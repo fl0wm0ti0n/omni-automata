@@ -9,19 +9,19 @@
 #endif
 
 #include "logger.h"
-#include "sensor.h"
+#include "Sensor.h"
 #include <Bounce2.h>
 
-class digitalIn final :public sensor
+class DigitalIn final :public Sensor
 {
 private:
-	bool	bSwitchState_ = false;
+	bool	b_switch_state_ = false;
 	logger* logger_g_;
 	Bounce input_;
 	
 public:
-	digitalIn(char n[], unsigned short p);
-	~digitalIn();
+	DigitalIn(char n[], unsigned short p);
+	~DigitalIn();
 	bool getFell();
 	bool getRose();
 	bool getChanged();

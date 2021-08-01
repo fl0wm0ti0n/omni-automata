@@ -9,16 +9,17 @@
 #include "WProgram.h"
 #endif
 
-#include "sensor.h"
+#include "Sensor.h"
 
-class gasSensor : public sensor
+class GasSensor : public Sensor
 {
 private:
-	int iAnalogValue;
-	int	iPinNum;
-	float sensorValue = 0;
-	float value = 0;
-	float sensorResistance = 0;
+	int analog_value_;
+	int	pin_num_;
+	float sensor_value_ = 0;
+	float value_ = 0;
+	float sensor_resistance_ = 0;
+	logger* logger_g_;
 
 	// CO2
 	#define RLOAD 10.0
@@ -27,17 +28,17 @@ private:
 	#define PARB 2.769034857
 
 	// CO
-	#define R_Load 10.0					//Load resistance 10 Kohms on the sensor potentiometer
+	#define R_Load 10.0					//Load resistance 10 Kohms on the Sensor potentiometer
 	#define coefficient_A 19.32
 	#define coefficient_B -0.64
 	#define v_in 5
-	float vRatio = 0;
-	float v_out;
+	float v_ratio_ = 0;
+	float v_out_;
 
 
 public:
-	gasSensor(String n, int p);			// Constructor
-	virtual ~gasSensor();				// Destructor
+	GasSensor(char n[], int p);			// Constructor
+	virtual ~GasSensor();				// Destructor
 
 	int getRawValue();					// Method: get Value
 	int setPin(int iPin);				// Method: set Pin

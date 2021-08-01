@@ -1,17 +1,17 @@
 
-// @file           sensor.cpp
+// @file           Sensor.cpp
 // @author         flow@p0cki.at
 // @date           01.2017
 // @brief          baseclass of all sensors
 
-#include "sensor.h"
+#include "Sensor.h"
 #include "constants.h"
 
-sensor::sensor(t_sensor_type t, char n[], unsigned short p)
+Sensor::Sensor(t_sensor_type t, char n[], unsigned short p)
 	:sensortype_(t), sensorname_(n), sensorvalue_(0), sensorpin_(p)
 {
-	sensor::setPin(sensorpin_);
+	Sensor::setPin(sensorpin_);
 }
 
-sensor::~sensor()
+Sensor::~Sensor()
 = default;

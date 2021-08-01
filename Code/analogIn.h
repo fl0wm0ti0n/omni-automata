@@ -9,20 +9,20 @@
 	#include "WProgram.h"
 #endif
 
-#include "sensor.h"
+#include "Sensor.h"
 
-class analogIn final : public sensor
+class AnalogIn final : public Sensor
 {
 	private:
-		unsigned short iAnalogValue;
-		unsigned short	iPinNum;
+		unsigned short analog_value_;
+		unsigned short	pin_num_;
 		logger* logger_g_;
 
 	public:
-		analogIn(char n[], unsigned short p);			// Constructor
-		~analogIn();						// Destructor
+		AnalogIn(char n[], unsigned short p);			// Constructor
+		~AnalogIn();									// Destructor
 
-		unsigned short getAnalogValue();						// Method: get Value
+		unsigned short getAnalogValue();				// Method: get Value
 };
 
 #endif

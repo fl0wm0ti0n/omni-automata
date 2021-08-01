@@ -82,56 +82,54 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="analogIn.h" />
+    <ClInclude Include="AnalogIn.h" />
     <ClInclude Include="decisions.h" />
     <ClInclude Include="actor.h" />
     <ClInclude Include="analogOut.h" />
-    <ClInclude Include="dhtSensor.h" />
-    <ClInclude Include="digitalIn.h" />
-    <ClInclude Include="directionEncoder.h" />
+    <ClInclude Include="DhtSensor.h" />
+    <ClInclude Include="DigitalIn.h" />
+    <ClInclude Include="DirectionEncoder.h" />
     <ClInclude Include="doggle.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="digitalOut.h" />
-    <ClInclude Include="gasSensor.h" />
-    <ClInclude Include="home_logger.h" />
+    <ClInclude Include="GasSensor.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="MemoryInfo.h" />
-    <ClInclude Include="motionSensor.h" />
+    <ClInclude Include="MotionSensor.h" />
     <ClInclude Include="neopixel.h" />
     <ClInclude Include="pgmStrToRAM\MemoryFree.h" />
     <ClInclude Include="pgmStrToRAM\pgmStrToRAM.h" />
     <ClInclude Include="PinChangeInt.h" />
     <ClInclude Include="RGBLed.h" />
-    <ClInclude Include="sensor.h" />
+    <ClInclude Include="Sensor.h" />
     <ClInclude Include="randomtemplight.h" />
-    <ClInclude Include="sensor_lux.h" />
+    <ClInclude Include="LuxSensor.h" />
     <ClInclude Include="statesController.h" />
     <ClInclude Include="Streaming.h" />
-    <ClInclude Include="touchSensor.h" />
+    <ClInclude Include="TouchSensor.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="__vm\.Code.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="analogIn.cpp" />
+    <ClCompile Include="AnalogIn.cpp" />
     <ClCompile Include="decisions.cpp" />
     <ClCompile Include="actor.cpp" />
     <ClCompile Include="analogOut.cpp" />
-    <ClCompile Include="dhtSensor.cpp" />
-    <ClCompile Include="digitalIn.cpp" />
-    <ClCompile Include="directionEncoder.cpp" />
+    <ClCompile Include="DhtSensor.cpp" />
+    <ClCompile Include="DigitalIn.cpp" />
+    <ClCompile Include="DirectionEncoder.cpp" />
     <ClCompile Include="doggle.cpp" />
     <ClCompile Include="digitalOut.cpp" />
-    <ClCompile Include="gasSensor.cpp" />
-    <ClCompile Include="home_logger.cpp" />
+    <ClCompile Include="GasSensor.cpp" />
     <ClCompile Include="logger.cpp" />
-    <ClCompile Include="motionSensor.cpp" />
+    <ClCompile Include="MotionSensor.cpp" />
     <ClCompile Include="neopixel.cpp" />
     <ClCompile Include="pgmStrToRAM\MemoryFree.cpp" />
     <ClCompile Include="pgmStrToRAM\pgmStrToRAM.cpp" />
     <ClCompile Include="RGBLed.cpp" />
-    <ClCompile Include="sensor.cpp" />
-    <ClCompile Include="sensor_lux.cpp" />
+    <ClCompile Include="Sensor.cpp" />
+    <ClCompile Include="LuxSensor.cpp" />
     <ClCompile Include="TouchSensor.cpp" />
   </ItemGroup>
   <PropertyGroup>
