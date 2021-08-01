@@ -1,29 +1,10 @@
 // @file           home_constants.cpp
 // @author         flow@p0cki.at
-// @date           07.2021
+// @date           11.2016
 // @brief          define all constants
 
-#ifndef _CONSTANTS_h
-#define _CONSTANTS_h
-
-// Run Test Yes/No
-//#define _TEST	1
-#define _SWITCHTESTPERIOD	120000
-
-// Debug Yes/No
-//#define DEBUG 0
-
-// Meminfo Yes/No
-//#define MEMINFO_
-#define  FCHAR(x) 	char buffer[] PROGMEM
-
-#ifdef DEBUG
-#define DEBUG_PRINT(x)     Serial.print (x)
-#define DEBUG_PRINTLN(x)  Serial.println (x)
-#else
-#define DEBUG_PRINT(x)
-#define DEBUG_PRINTLN(x)
-#endif
+#ifndef _HOME_CONSTANTS_h
+#define _HOME_CONSTANTS_h
 
 // verwendete Hardware
 // es darf immer nur eine Zeile true sein!
@@ -56,12 +37,8 @@
 // PIN_PWM_1:	6 (Nano), 0 (nodeMCU V3)
 // PIN_PWM_2:	9 (Nano), 2 (nodeMCU V3)
 #if (NANO == true)
-#define PIN_PWM_1		3
-#define PIN_PWM_2		5
-#define PIN_PWM_3		6
-#define PIN_PWM_4		9
-#define PIN_PWM_5		10
-#define PIN_PWM_6		11
+#define PIN_PWM_1		9
+#define PIN_PWM_2		
 #endif
 #if (NodeMCUV3 == true)
 #define PIN_PWM_1		0
@@ -107,9 +84,8 @@
 #define DEFAULT_THRESHOLD		0.5
 #define DEFAULT_MAXVALUE		255
 #define DEFAULT_MINVALUE		0
-#define DEFAULT_ALLLEDS			(-1)
+#define DEFAULT_ALLLEDS			-1
 #define DEFAULT_BAUTRATE		9600
-#define DEFAULT_DEBOUNCE		5
 
 //****** DEFAULT WS2812 Values *********
 #define DEFAULT_NEOPIXEL_MaxDunkelZyklen		1

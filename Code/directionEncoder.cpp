@@ -1,10 +1,12 @@
 #include "directionEncoder.h"
 
-
-
-directionEncoder::directionEncoder(String n, int pSW, int pCLK, int pDT)
+directionEncoder::directionEncoder(char n[], int pSW, int pCLK, int pDT)
 	:sensor(digitalIn_sens, n, pSW)
 {
+#ifdef DEBUG
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+#endif
 	pinCLK_ = pCLK;
 	pinDT_ = pDT;
 	pinSW_ = pSW;
@@ -17,10 +19,12 @@ directionEncoder::directionEncoder(String n, int pSW, int pCLK, int pDT)
 directionEncoder::~directionEncoder()
 = default;
 
-int directionEncoder::getEncoderValue(logger &log)
+int directionEncoder::getEncoderValue()
 {
-
-	log.writeLog(F("Call - GetEncoder"), extremedebug);
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - GetEncoder";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
 	CLKVal_ = digitalRead(pinCLK_);
 	if (CLKVal_ != oldCLKVal_) { // Means the knob is rotating
 	  // if the knob is rotating, we need to determine direction
@@ -34,10 +38,18 @@ int directionEncoder::getEncoderValue(logger &log)
 			bCW_ = false;
 			encoderPosCount_ = encoderPosCount_ - clicks_;
 		}
-		log.writeLog(F("Rotated "), extremedebug);
+#ifdef DEBUG
+		static const char* const buffer PROGMEM = "Rotated ";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
+
 		
 		if (bCW_) {
-			log.writeLog(F("counterclockwise: "), extremedebug);
+#ifdef DEBUG
+			static const char* const buffer PROGMEM = "counterclockwise: ";
+			logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
+
 			turn_ = -1;
 			if (oldTurn_ == turn_)
 			{
@@ -45,15 +57,26 @@ int directionEncoder::getEncoderValue(logger &log)
 			}
 		}
 		else {
-			log.writeLog(F("clockwise: "), extremedebug);
+#ifdef DEBUG
+			static const char* const buffer PROGMEM = "clockwise: ";
+			logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
+
 			turn_ = 1;
 			if (oldTurn_ == turn_)
 			{
 				turn_ = 0;
 			}
 		}
-		log.writeLog("Encoder Position: " + String(encoderPosCount_), sensordata);
-		log.writeLog("Encoder return: " + String(turn_), sensordata);
+#ifdef DEBUG
+		static const char* const buffer1 PROGMEM = "Encoder Position: ";
+		logger_g_->LnWriteLog(buffer1, sensordata);
+		logger_g_->WriteLog(encoderPosCount_, sensordata);
+		static const char* const buffer2 PROGMEM = "Encoder return: ";
+		logger_g_->LnWriteLog(buffer2, sensordata);
+		logger_g_->WriteLog(turn_, sensordata);
+#endif
+
 	}
 	else
 	{
@@ -64,49 +87,79 @@ int directionEncoder::getEncoderValue(logger &log)
 	return  turn_;
 }
 
-bool directionEncoder::getSwitchValue(logger &log)
+bool directionEncoder::getValue()
 {
-	log.writeLog(F("Call - EnSwitch"), extremedebug);
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - EnSwitch";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
+
 	if (digitalRead(getPin()) == HIGH)
 	{
-		log.writeLog("Switch: is true", sensordata);
+#ifdef DEBUG
+		static const char* const buffer PROGMEM = "Switch: is true";
+		logger_g_->LnWriteLog(buffer, sensordata);
+#endif
+
 		bSwitchState_ = true;
 	}
 	else
 	{
-		log.writeLog("Switch: is false", sensordata);
+#ifdef DEBUG
+		static const char* const buffer PROGMEM = "Switch: is false";
+		logger_g_->LnWriteLog(buffer, sensordata);
+#endif
+
 		bSwitchState_ = false;
 	}
 	return bSwitchState_;
 }
 
-bool directionEncoder::getSwitchValueDoggle(logger &log)
+bool directionEncoder::getSwitchValueDoggle()
 {
-	log.writeLog(F("Call - EnSwitchDoggle"), extremedebug);
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - EnSwitchDoggle";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
+
 	if (digitalRead(getPin()))
 	{
 		bdoggleState_ = !bdoggleState_;
-	}
+#ifdef DEBUG
+		static const char* const buffer PROGMEM = "Doggled";
+		logger_g_->LnWriteLog(buffer, sensordata);
+#endif
 
+	}
 	return bdoggleState_;
 }
 
-bool directionEncoder::getSwitchLongValue(logger &log)
+bool directionEncoder::getSwitchLongValue()
 {
-	log.writeLog(F("Call - getSwitchLongValue"), extremedebug);
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - getSwitchLongValue";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
+
 
 	if (digitalRead(getPin()) == LOW && iSwitchState_ != 0)
 	{
 		iSwitchState_ = 0;
 		iSwitchValue_ = true;
-		log.writeLog("Switch is true", sensordata);
+#ifdef DEBUG
+		static const char* const buffer PROGMEM = "Switch is true";
+		logger_g_->LnWriteLog(buffer, sensordata);
+#endif
 	}
 
 	if (digitalRead(getPin()) == HIGH && iSwitchState_ != 1)
 	{
 		iSwitchState_ = 1;
 		iSwitchValue_ = false;
-		log.writeLog("Switch is false", sensordata);
+#ifdef DEBUG
+		static const char* const buffer PROGMEM = "Switch is false";
+		logger_g_->LnWriteLog(buffer, sensordata);
+#endif
 	}
 	return iSwitchValue_;
 }

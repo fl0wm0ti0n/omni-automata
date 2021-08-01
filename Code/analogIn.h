@@ -11,18 +11,18 @@
 
 #include "sensor.h"
 
-class analogIn : public sensor
+class analogIn final : public sensor
 {
 	private:
-		int iAnalogValue;
-		int	iPinNum;
+		unsigned short iAnalogValue;
+		unsigned short	iPinNum;
+		logger* logger_g_;
 
 	public:
-		analogIn(String n, int p);			// Constructor
-		virtual ~analogIn();				// Destructor
+		analogIn(char n[], unsigned short p);			// Constructor
+		~analogIn();						// Destructor
 
-		int getValue();						// Method: get Value
-		int setPin(int iPin);				// Method: set Pin
+		unsigned short getAnalogValue();						// Method: get Value
 };
 
 #endif

@@ -9,7 +9,7 @@ drive a motor at various speeds.After a call to analogWrite(), the pin will gene
 square wave of the specified duty cycle until the next call to analogWrite() (or a call to 
 digitalRead() or digitalWrite() on the same pin).The frequency of the PWM signal on most pins 
 is approximately 490 Hz.On the Uno and similar boards, pins 5 and 6 have a frequency of approximately 980 Hz.
-Pins 3 and 11 on the Leonardo also run at 980 Hz.
+Pins 3 and 11 on the Leonardo also Run at 980 Hz.
 
 On most Arduino boards(those with the ATmega168 or ATmega328), this function works on pins 3, 5, 6, 9, 10, 
 and 11. On the Arduino Mega, it works on pins 2 - 13 and 44 - 46. Older Arduino boards with an 
@@ -31,12 +31,13 @@ ATmega8 only support analogWrite() on pins 9, 10, and 11.
 class analogOut :public actor
 {
 	int lightcounter_ = 0;
+	logger* logger_g_;
 
 public:
-	analogOut(String n, int p);
+	analogOut(char n[], int p);
 	virtual ~analogOut();
-	virtual bool setValue(int v,logger &Logging_one);
-	bool doggle(logger &Logging_one);
-	void SlowlyIncreaseOrDecreaseValue(bool sensorResult, int maxValue, logger& log);
+	virtual bool setValue(int v);
+	bool doggle();
+	void SlowlyIncreaseOrDecreaseValue(bool sensorResult, int maxValue);
 };
 #endif

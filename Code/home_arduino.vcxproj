@@ -47,10 +47,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\master-dev-branch;X:\DataHub\Projektmappen\Arduino\libraries\FastLED;X:\DataHub\Projektmappen\Arduino\libraries\DHT_sensor_library;$(ProjectDir)..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;$(ProjectDir)..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;$(ProjectDir)..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\avr\include;$(ProjectDir)..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\avr\include\avr;$(ProjectDir)..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.2\include;$(ProjectDir)..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.2\include;$(ProjectDir)..\..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>$(ProjectDir)__vm\.master-dev-branch.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Code;$(ProjectDir)..\..\..\..\Users\flow\Documents\Arduino\libraries\Bounce2\src;$(ProjectDir)..\..\..\..\Users\flow\Documents\Arduino\libraries\FastLED;$(ProjectDir)..\..\..\..\Users\flow\Documents\Arduino\libraries\DHT_sensor_library;$(ProjectDir)..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;$(ProjectDir)..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;$(ProjectDir)..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\\lib\gcc\avr\7.3.0\include;$(ProjectDir)..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\avr\include;$(ProjectDir)..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\\lib\gcc\avr\7.3.0\include;$(ProjectDir)..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\avr\include-fixed;$(ProjectDir)..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\avr\include\avr;$(ProjectDir)..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.2\include;$(ProjectDir)..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.2\include;$(ProjectDir)..\..\..\..\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ProjectDir)__vm\.Code.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-      <PreprocessorDefinitions>__AVR_atmega328p__;__AVR_ATmega328P__;__AVR_ATmega328p__;_VMDEBUG=1;F_CPU=16000000L;ARDUINO=106011;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__AVR_atmega328p__;__AVR_ATmega328P__;__AVR_ATmega328p__;F_CPU=16000000L;ARDUINO=108013;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -74,49 +74,64 @@
     <ProjectCapability Include="VisualMicro" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include="constants.h.bak" />
+    <None Include="CppProperties.json" />
     <None Include="home_arduino.ino">
       <FileType>CppCode</FileType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="decisions.h" />
-    <ClInclude Include="dhtSensor.h" />
-    <ClInclude Include="actor.h" />
     <ClInclude Include="analogIn.h" />
+    <ClInclude Include="decisions.h" />
+    <ClInclude Include="actor.h" />
     <ClInclude Include="analogOut.h" />
+    <ClInclude Include="dhtSensor.h" />
+    <ClInclude Include="digitalIn.h" />
     <ClInclude Include="directionEncoder.h" />
     <ClInclude Include="doggle.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="digitalOut.h" />
     <ClInclude Include="gasSensor.h" />
+    <ClInclude Include="home_logger.h" />
+    <ClInclude Include="list.h" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="MemoryInfo.h" />
     <ClInclude Include="motionSensor.h" />
     <ClInclude Include="neopixel.h" />
     <ClInclude Include="pgmStrToRAM\MemoryFree.h" />
     <ClInclude Include="pgmStrToRAM\pgmStrToRAM.h" />
+    <ClInclude Include="PinChangeInt.h" />
+    <ClInclude Include="RGBLed.h" />
     <ClInclude Include="sensor.h" />
-    <ClInclude Include="touchSensor.h" />
     <ClInclude Include="randomtemplight.h" />
+    <ClInclude Include="sensor_lux.h" />
+    <ClInclude Include="statesController.h" />
     <ClInclude Include="Streaming.h" />
-    <ClInclude Include="__vm\.home_arduino.vsarduino.h" />
-    <ClInclude Include="__vm\.master-dev-branch.vsarduino.h" />
+    <ClInclude Include="touchSensor.h" />
+    <ClInclude Include="vector.h" />
+    <ClInclude Include="__vm\.Code.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="decisions.cpp" />
-    <ClCompile Include="dhtSensor.cpp" />
-    <ClCompile Include="actor.cpp" />
     <ClCompile Include="analogIn.cpp" />
+    <ClCompile Include="decisions.cpp" />
+    <ClCompile Include="actor.cpp" />
     <ClCompile Include="analogOut.cpp" />
+    <ClCompile Include="dhtSensor.cpp" />
+    <ClCompile Include="digitalIn.cpp" />
     <ClCompile Include="directionEncoder.cpp" />
     <ClCompile Include="doggle.cpp" />
     <ClCompile Include="digitalOut.cpp" />
     <ClCompile Include="gasSensor.cpp" />
+    <ClCompile Include="home_logger.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="motionSensor.cpp" />
     <ClCompile Include="neopixel.cpp" />
     <ClCompile Include="pgmStrToRAM\MemoryFree.cpp" />
     <ClCompile Include="pgmStrToRAM\pgmStrToRAM.cpp" />
+    <ClCompile Include="RGBLed.cpp" />
     <ClCompile Include="sensor.cpp" />
+    <ClCompile Include="sensor_lux.cpp" />
     <ClCompile Include="TouchSensor.cpp" />
   </ItemGroup>
   <PropertyGroup>

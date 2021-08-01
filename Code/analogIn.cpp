@@ -5,24 +5,26 @@
 
 #include "analogIn.h"
 
-analogIn::analogIn(String n, int p)
+analogIn::analogIn(char n[], unsigned short p)
 	:sensor(analogIn_sens, n, p)
 {
-	sensor::getValue(analogRead(p));
+#ifdef DEBUG
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+#endif
 	setPin(p);
 }
 
 analogIn::~analogIn()
 = default;
 
-int analogIn::setPin(int iPin)
+unsigned short analogIn::getAnalogValue()
 {
-	iPinNum = iPin;
-	pinMode(iPinNum, INPUT);
-}
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - analogIn.getValue";
+	logger_g_->WriteLog(buffer, extremedebug);
+#endif
 
-int analogIn::getValue()
-{
 	iAnalogValue = analogRead(iPinNum);
 	return iAnalogValue;
 }

@@ -12,7 +12,7 @@
 #include "sensor.h"
 #include "logger.h"
 
-class directionEncoder : public sensor
+class directionEncoder final : public sensor
 {
 private:
 
@@ -25,21 +25,22 @@ private:
 	bool	bCW_			= false;
 	bool	bSwitchState_	= false;
 	bool	bdoggleState_	= false;
-	byte	turn_			= 0;
+	int		turn_			= 0;
 	byte	oldTurn_		= 0;
 	float	clicks_			= 0.5;
 	byte	iSwitchState_	= 0;
 	bool	iSwitchValue_	= 0;
+	logger* logger_g_;
 
 public:
-	directionEncoder(String n, int pSW, int pCLK, int pDT);
-	virtual ~directionEncoder();
-	int getEncoderValue(logger &log);		// Method: get encoder Value
-	bool getSwitchValue(logger &log);		// Method: get switch Value
-	bool getSwitchValueDoggle(logger& log);
-	bool getSwitchLongValue(logger& log);
+	directionEncoder(char n[], int pSW, int pCLK, int pDT);
+	~directionEncoder();
+	int getEncoderValue();		// Method: get encoder Value
+	bool getValue();				// Method: get switch Value
+	bool getSwitchValueDoggle();
+	bool getSwitchLongValue();
 
-	void setClickValue(double clicks, logger &log)
+	void setClickValue(float clicks)
 	{
 		clicks_ = clicks;
 	}

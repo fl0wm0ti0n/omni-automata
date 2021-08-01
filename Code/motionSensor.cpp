@@ -6,19 +6,24 @@
 #include "motionSensor.h"
 #include "constants.h"
 
-motionSensor::motionSensor(String n, int p)
+motionSensor::motionSensor(char n[], int p)
 	:sensor(digitalIn_sens, n, p)
 {
-
+#ifdef DEBUG
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+#endif
 }
 
 motionSensor::~motionSensor()
 = default;
 
-bool motionSensor::getValue(logger &log)
+bool motionSensor::getValue()
 {
-	log.writeLog(F("Call - motionGetValue"), extremedebug);
-	
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - motionGetValue";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
 	/*if (digitalRead(getPin()) == HIGH)
 	{
 		logging_one.writeLog("Motion: is true", sensordata);
@@ -34,20 +39,29 @@ if (digitalRead(getPin()) == LOW && iMotionState != 0)
 {
 	iMotionState = 0;
 	iMotionValue = false;
-	log.writeLog(F("Motion is true"), sensordata);
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Motion is true";
+	logger_g_->LnWriteLog(buffer, sensordata);
+#endif
 }
 
 if (digitalRead(getPin()) == HIGH && iMotionState != 1)
 {
 	iMotionState = 1;
 	iMotionValue = true;
-	log.writeLog(F("Motion is false"), sensordata);
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Motion is false";
+	logger_g_->LnWriteLog(buffer, sensordata);
+#endif
 }
 		return iMotionValue;
 }
 
-bool motionSensor::trueIfStatusChanged(logger &log)
+bool motionSensor::trueIfStatusChanged()
 {
-	log.writeLog(F("Call - motion - trueIfStatusChanged"), extremedebug);
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - motion - trueIfStatusChanged";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
 	// toDo!
 }

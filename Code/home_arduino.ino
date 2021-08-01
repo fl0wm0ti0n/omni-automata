@@ -3,6 +3,7 @@
 // @date           12.2016
 // @brief          main routine
 
+#include <Bounce2.h>
 #include "constants.h"		// Constanten müssen vor allem anderen initialisiert werden
 
 // Wenn als Board das NodeMCU V3 gewählt wurde wird dies entsprechend freigeschalten.
@@ -27,7 +28,7 @@
 //********************* DECLARATION *********************
 //*******************************************************
 // Objekte welche sofort benötigt werden.
-logger Logging_one(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, "Logging1");
+logger* Logging_one = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, "Logging1");
 analogOut LightStripe_one("lightstripe 1", PIN_PWM_1);
 neopixel WS2812Stripe("WS2812", PIN_WS2812_1, NUM_LEDS_1);
 motionSensor Motionsensor_one("motionsensor 1", PIN_MOTION_1);
@@ -55,22 +56,22 @@ volatile uint16_t interruptCount = 0;*/
 
 void motionCheckForLight()
 {
-	Logging_one.writeLog(F("Call - motionCheckForLight"), extremedebug);
-	bool motionResult = Motionsensor_one.getValue(Logging_one);
+	Logging_one->LnWriteLog("Call - motionCheckForLight", extremedebug);
+	bool motionResult = Motionsensor_one.getValue();
 	//bool motionResult = encoder_one.getSwitchLongValue(Logging_one);
-	LightStripe_one.SlowlyIncreaseOrDecreaseValue(motionResult, DEFAULT_MAXVALUE, Logging_one);
+	LightStripe_one.SlowlyIncreaseOrDecreaseValue(motionResult, DEFAULT_MAXVALUE);
 }
 
 void motionCheckForNeopixel()
 {
-	Logging_one.writeLog(F("Call - motionCheckForNeopixel"), extremedebug);
-	int motionResult = Motionsensor_one.getValue(Logging_one);
-	WS2812Stripe.SlowlyIncreaseOrDecreaseBrightness(DEFAULT_ALLLEDS, motionResult, DEFAULT_MAXVALUE, Logging_one);
+	Logging_one->WriteLog("Call - motionCheckForNeopixel", extremedebug);
+	int motionResult = Motionsensor_one.getValue();
+	WS2812Stripe.SlowlyIncreaseOrDecreaseBrightness(DEFAULT_ALLLEDS, motionResult, DEFAULT_MAXVALUE);
 }
 
 void dhtCheck()
 {
-	Logging_one.writeLog(F("Call - dhtCheck"), extremedebug);
+	Logging_one->WriteLog("Call - dhtCheck", extremedebug);
 	bool motionResult = Motionsensor_one.getValue(Logging_one);
 	float hum = DHTSensor_one.getHumValueOnlyIfChanged(Logging_one);
 	float temp = DHTSensor_one.getTempValueOnlyIfChanged(Logging_one);

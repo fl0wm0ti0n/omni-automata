@@ -4,8 +4,8 @@
 // @date           12.2016
 // @brief          flip a Value
 
-#ifndef _HOME_DOGGLE_h
-#define _HOME_DOGGLE_h
+#ifndef _DOGGLE_h
+#define _DOGGLE_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "arduino.h"

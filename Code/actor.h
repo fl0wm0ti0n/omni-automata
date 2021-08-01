@@ -28,33 +28,40 @@ class actor
 
 private:
 	t_actor_type m_iType;
-	String m_cName;
-	int m_iValue;
-	int m_iPin;
+	char* m_cName;
+
 
  public:
-	 actor(t_actor_type t, String n, int p);
+	 actor(t_actor_type t, char n[], int p);
+	 actor(t_actor_type t, char n[], int p1, int p2, int p3);
 	 virtual ~actor();
 
 	 t_actor_type getType()
 		{return m_iType;}
 	 
-	 String getName()
+	 char* getName()
 		{return m_cName;}
 	 
 	 int getValue()
 		{return m_iValue;}
 
 	 int getPin()
-		{ return m_iPin;}
+		{ return m_iPin1;}
 
 	 int setPin(int p)
 	 {
-		 m_iPin = p;
-		 pinMode(m_iPin, OUTPUT);
+		 m_iPin1 = p;
+		 pinMode(m_iPin1, OUTPUT);
 		 return true;
 	 }
 	
 	 virtual bool setValue(int v);
+
+protected:
+		int m_iValue;
+		int m_iPin1;
+		int	m_iPin2;
+		int	m_iPin3;
+
 };
 #endif

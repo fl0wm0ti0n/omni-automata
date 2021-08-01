@@ -19,11 +19,11 @@ private:
 	bool iMotionValue = false;
 
 public:
-	motionSensor(String n, int p);		// Constructor
+	motionSensor(char n[], int p);		// Constructor
 	virtual ~motionSensor();				// Destructor
 
-	virtual bool getValue(logger &logging_one);		// Method: get motion Value
-	bool trueIfStatusChanged(logger& log);
+	virtual bool getValue();		// Method: get motion Value
+	bool trueIfStatusChanged();
 };
 
 #endif

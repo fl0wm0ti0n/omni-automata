@@ -6,18 +6,26 @@
 #include "analogOut.h"
 #include "logger.h"
 
-analogOut::analogOut(String n, int p)
+analogOut::analogOut(char n[], int p)
 	:actor(analogOut_act, n, p)
 {
+#ifdef DEBUG
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+#endif
 	actor::setValue(analogRead(p));
 }
 
 analogOut::~analogOut()
 = default;
 
-bool analogOut::setValue(int v, logger &log)
+bool analogOut::setValue(int v)
 {
-	log.writeLog("Call - analogOut - setValue", extremedebug);
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - analogOut - setValue";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
+
 
 	if (getValue() != v)
 	{
@@ -27,24 +35,32 @@ bool analogOut::setValue(int v, logger &log)
 	return true;
 }
 
-bool analogOut::doggle(logger &log)
+bool analogOut::doggle()
 {
-	log.writeLog("Call - analogOut - doggle", extremedebug);
-	return setValue(!getValue(), log);
+	static const char* const buffer PROGMEM = "Call - analogOut - doggle";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+	return setValue(!getValue());
 }
 
-void analogOut::SlowlyIncreaseOrDecreaseValue(bool sensorResult, int maxValue, logger &log)
+void analogOut::SlowlyIncreaseOrDecreaseValue(bool sensorResult, int maxValue)
 {
-	log.writeLog("Call - LEDSlowlyInDecreaseValue", extremedebug);
-
-	if (sensorResult == true)
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - LEDSlowlyInDecreaseValue";
+	logger_g_->WriteLog(buffer, extremedebug);
+#endif
+	if (sensorResult)
 	{
 		if (lightcounter_ != maxValue)
 		{
 			if (lightcounter_ < maxValue)
 			{
 				lightcounter_++;
-				log.writeLog("Value Up - " + String(lightcounter_), extremedebug);
+#ifdef DEBUG
+				static const char* const buffer PROGMEM = "Value Up - ";
+				logger_g_->LnWriteLog(buffer, extremedebug);
+				logger_g_->WriteLog(lightcounter_, extremedebug);
+#endif
+
 			}
 		}
 	}
@@ -55,9 +71,13 @@ void analogOut::SlowlyIncreaseOrDecreaseValue(bool sensorResult, int maxValue, l
 			if (lightcounter_ > 0)
 			{
 				lightcounter_--;
-				log.writeLog("Value Down - " + String(lightcounter_), extremedebug);
+#ifdef DEBUG
+				static const char* const buffer PROGMEM = "Value Down - ";
+				logger_g_->LnWriteLog(buffer, extremedebug);
+				logger_g_->WriteLog(lightcounter_, extremedebug);
+#endif
 			}
 		}
 	}
-	setValue(lightcounter_, log);
+	setValue(lightcounter_);
 }

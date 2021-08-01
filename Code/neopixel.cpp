@@ -17,6 +17,10 @@
 neopixel::neopixel(String name, byte pin, byte numleds)
 	:actor(WS2812_act, name, pin)
 {
+#ifdef DEBUG
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+#endif
 	numleds_ = numleds;
 	ledsA_[numleds];
 }
@@ -31,7 +35,10 @@ neopixel::~neopixel()
 // Die Anzahl der Leds sollte in constants.h definiert werden.
 CRGB* neopixel::InitNeoPixel(byte brightness, byte saturation, logger &log)
 {
-	log.writeLog(F("Setup WS2812..."), debug);
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Setup WS2812...";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
 	brightness_ = brightness;
 	saturation_ = saturation;
 	LEDS.setBrightness(0);
@@ -92,7 +99,10 @@ void neopixel::setAllLikeInputArray(short led)
 // wird led "-1" übergeben werden alle geschalten, wird eine bestimmte Zahl mitgegeben wird eine LED geschalten.
 bool neopixel::setValues(short led, byte hue, byte saturation, byte brightness, logger &log)
 {
-	log.writeLog(F("Call - neopixel - setValues"), extremedebug);
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - neopixel - setValues";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
 
 	if (saturation_ != saturation || hue_ != hue || brightness_ != brightness)
 	{
@@ -108,7 +118,13 @@ bool neopixel::setValues(short led, byte hue, byte saturation, byte brightness, 
 		{
 			brightness_ = brightness;
 		}
-		log.writeLog("Set LED Values: " + String(hue_) + String(saturation_) + String(brightness_), debug);
+#ifdef DEBUG
+		static const char* const buffer PROGMEM = "Set LED Values: ";
+		logger_g_->LnWriteLog(buffer, debug);
+		logger_g_->WriteLog(hue_, debug);
+		logger_g_->WriteLog(saturation_, debug);
+		logger_g_->WriteLog(brightness_, debug);
+#endif
 		setAllLikeInput(led);
 		return true;
 	}
@@ -121,9 +137,16 @@ bool neopixel::setSaturation(short led, byte saturation, logger &log)
 {
 	if (saturation_ != saturation)
 	{
-		log.writeLog(F("Call - neopixel - setSaturation"), extremedebug);
+#ifdef DEBUG
+		static const char* const buffer PROGMEM = "Call - neopixel - setSaturation";
+		logger_g_->LnWriteLog(buffer, debug);
+#endif
 		saturation_ = saturation;
-		log.writeLog("Set Saturation: " + String(saturation_), debug);
+#ifdef DEBUG
+		static const char* const buffer PROGMEM = "Set Saturation: ";
+		logger_g_->LnWriteLog(buffer, debug);
+		logger_g_->WriteLog(saturation_, debug);
+#endif
 		setAllLikeInput(led);
 		return true;
 	}
@@ -134,11 +157,18 @@ bool neopixel::setSaturation(short led, byte saturation, logger &log)
 // wird led "-1" übergeben werden alle geschalten, wird eine bestimmte Zahl mitgegeben wird eine LED geschalten.
 bool neopixel::setHue(short led, byte hue, logger &log)
 {
-	log.writeLog(F("Call - neopixel - setHue"), extremedebug);
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - neopixel - setHue";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
 	if (hue_ != hue)
 	{
 		hue_ = hue;
-		log.writeLog("Set Color: " + String(hue_), debug);
+#ifdef DEBUG
+		static const char* const buffer PROGMEM = "Set Color: ";
+		logger_g_->LnWriteLog(buffer, debug);
+		logger_g_->WriteLog(hue_, debug);
+#endif
 		setAllLikeInput(led);
 		return true;
 	}
@@ -151,9 +181,16 @@ bool neopixel::setBrightness(short led, byte brightness, logger &log)
 {
 	if (brightness_ != brightness)
 	{
-		log.writeLog(F("Call - neopixel - setBrightness"), extremedebug);
+#ifdef DEBUG
+		static const char* const buffer PROGMEM = "Call - neopixel - setSaturation";
+		logger_g_->LnWriteLog(buffer, debug);
+#endif
 		brightness_ = brightness;
-		log.writeLog("Set Brightness: " + String(brightness_), debug);
+#ifdef DEBUG
+		static const char* const buffer PROGMEM = "Set Saturation: ";
+		logger_g_->LnWriteLog(buffer, debug);
+		logger_g_->WriteLog(brightness_, debug);
+#endif
 		setAllLikeInput(led);
 		return true;
 	}

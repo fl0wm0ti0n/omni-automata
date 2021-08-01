@@ -4,128 +4,119 @@
 // @brief     baseclass of logging
 
 #include "logger.h"
-#include "Streaming.h"
 
-logger::logger(t_log_level t, t_log_target g, String n)
-	:m_iLogLvl_(t), m_iLogTarget_(g), m_cName_(n)
+logger* logger::singleton_ = nullptr;;
+
+/**
+ * Static methods should be defined outside the class.
+ */
+logger* logger::GetInstance(log_level t, log_target g, char n[])
 {
-	switch (m_iLogTarget_)
-	{
-	case 0:
-		Serial.begin(DEFAULT_BAUTRATE);
-			break;
-	case 1:
-		 // Netzwerk init - noch nicht implementiert!
-		break;
-	case 2:
-		// Archiv init - noch nicht implementiert!
-		break;
-	default:
-		break;
+	/**
+	 * This is a safer way to create an instance. instance = new Singleton is
+	 * dangeruous in case two instance threads wants to access at the same time
+	 */
+	//Serial.println("TEST");
+	if (singleton_ == nullptr) {
+		singleton_ = new logger(t, g, n);
 	}
-
-	// inizialisiere Array für Loglevel Ausgabe
-	aEnumlvl[0] = "error";
-	aEnumlvl[1] = "warni";
-	aEnumlvl[2] = "senso";
-	aEnumlvl[3] = "debug";
-	aEnumlvl[4] = "exdeb";
+	return singleton_;
 }
 
-logger::~logger()
-= default;
-
-void logger::writeLog(String text, t_log_level llevel)
+logger* logger::GetInstance()
 {
-	if (getLogLevel() != disabled)
-	{
-	handleLog(getActualTimestamp(), text, llevel);
-	}
+	//Serial.println("TEST");
+	return singleton_;
 }
 
-String logger::getActualTimestamp()
+char* logger::convert_bool_to_char(bool value)
 {
-	iSekunde = millis() / 1000;
-	if (iSekunde >= 3600)
+	char *varbool = new char[6];
+	if (value)
 	{
-		iStunde = 0;
-		while (iSekunde >= 3600)
+		strcpy(varbool, "true");
+	}
+	else
+	{
+		strcpy(varbool, "false");
+	}
+	return varbool;
+}
+
+char* logger::GetActualTimestamp()
+{
+	sekunde_ = millis() / 1000;
+	
+	if (sekunde_ >= 3600)
+	{
+		stunde_ = 0;
+		while (sekunde_ >= 3600)
 		{
-			iStunde++;
-			iSekunde = iSekunde - 3600;
+			stunde_++;
+			sekunde_ = sekunde_ - 3600;
+		}
+	}
+	
+	if (sekunde_ >= 60)
+	{
+		minute_ = 0;
+		while (sekunde_ >= 60)
+		{
+			minute_++;
+			sekunde_ = sekunde_ - 60;
 		}
 	}
 
-	if (iSekunde >= 60)
-	{
-		iMinute = 0;
-		while (iSekunde >= 60)
-		{
-			iMinute++;
-			iSekunde = iSekunde - 60;
-		}
-	}
+	static char buffer[sizeof(byte) * 8 + 1];
+	strcpy(stunde_char_, itoa(stunde_, buffer, 10));
+	strcpy(minute_char_, itoa(minute_, buffer, 10));
+	strcpy(sekunde_char_, itoa(sekunde_, buffer, 10));
 
-	sStunde = String(iStunde);
-	sMinute = String(iMinute);
-	sSekunde = String(iSekunde);
+	if (strlen(stunde_char_) == 1) { strcpy(timestamp_char_, "0"); strcat(timestamp_char_, stunde_char_); }
+	else { strcpy(timestamp_char_, stunde_char_); }
+	strcat(timestamp_char_, ":");
+	if (strlen(minute_char_) == 1) { strcat(timestamp_char_, "0"); }
+	strcat(timestamp_char_, minute_char_);
+	strcat(timestamp_char_, ":");
+	if (strlen(sekunde_char_) == 1) { strcat(timestamp_char_, "0"); }
+	strcat(timestamp_char_, sekunde_char_);
 
-	if (sStunde.length()	== 1) { sStunde		= "0" + sStunde; }
-	if (sMinute.length()	== 1) { sMinute		= "0" + sMinute; }
-	if (sSekunde.length()	== 1) { sSekunde	= "0" + sSekunde; }
-
-	sTimestamp = sStunde + ":" + sMinute + ":" + sSekunde;
-
-	return sTimestamp;
+	return timestamp_char_;
 }
 
-String logger::getLogArchive(t_log_level llevel)
+char* logger::GetLogArchive(log_level llevel)
 {
-	String output;
-	if (getLogLevel() != disabled)
+	char output[256];
+	if (GetLogLevel() != disabled)
 	{
-		if (m_iLogTarget_ == archive)
+		if (log_target_ == archive)
 		{
-			if (m_iLogLvl_ == llevel)
+			if (log_lvl_ == llevel)
 			{
 				//noch nicht implementiert!
-				output = F("Funktion wurde noch nicht implementiert und benötigt ein Hardwaremodul!");
+				static const char* const message PROGMEM = "Funktion wurde noch nicht implementiert und benötigt ein Hardwaremodul!";
+				strcpy(output, message);
 			}
 		}
 		else
 		{
-			output = F("Das Archivieren der Protokolle ist deaktiviert!");
+			static const char* const message PROGMEM = "Das Archivieren der Protokolle ist deaktiviert!";
+			strcpy(output, message);
 		}
-		output = F("Das Logging wurde deaktiviert!");
+		static const char* const message PROGMEM = "Das Logging wurde deaktiviert!";
+		strcpy(output, message);
 	}
 	return output;
 }
 
-void logger::handleLog(String time, String text, t_log_level llevel)
+int logger::free_memory()
 {
-	if (m_iLogLvl_ >= llevel)
-	{
-		switch (m_iLogTarget_)
-		{
-		case 0:
-			//Serial.println(String(time) + " : " + String(aEnumlvl[llevel]) + " : " + String(text));
-			/*Serial.print(String(time));
-			Serial.print(" : ");
-			Serial.print(String(aEnumlvl[llevel]));
-			Serial.print(" : ");
-			Serial.println(String(text));*/
-			Serial << time << " : " << aEnumlvl[llevel] << " : " << text << endl;
-			break;
-		case 1:
-			// Netzwerk Stream - noch nicht implementiert!
-			break;
-		case 2:
-			// Archivdata - noch nicht implementiert!
-			break;
-		default:
-			//Serial.println(String(time) + " : " + String(aEnumlvl[llevel]) + " : " + String(text));
-			Serial << time << " : " << aEnumlvl[llevel] << " : " << text << endl;
-			break;
-		}
-	}
+	char top;
+#ifdef __arm__
+	return &top - reinterpret_cast<char*>(sbrk(0));
+#elif defined(CORE_TEENSY) || (ARDUINO > 103 && ARDUINO != 151)
+	return &top - __brkval;
+#else  // __arm__
+	return __brkval ? &top - __brkval : &top - __malloc_heap_start;
+#endif  // __arm__
 }
