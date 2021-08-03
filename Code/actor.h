@@ -12,7 +12,7 @@
 	#include "WProgram.h"
 #endif
 
-enum t_actor_type
+enum actor_type
 {
 	undefined_act = 0,
 	digitalOut_act = 1,
@@ -23,45 +23,44 @@ enum t_actor_type
 	RGB_act = 6
 };
 
-class actor
+class Actor
 {
 
 private:
-	t_actor_type m_iType;
-	char* m_cName;
-
+	actor_type type_;
+	char* name_;
 
  public:
-	 actor(t_actor_type t, char n[], int p);
-	 actor(t_actor_type t, char n[], int p1, int p2, int p3);
-	 virtual ~actor();
+	 Actor(actor_type t, char n[], int p);
+	 Actor(actor_type t, char n[], int p1, int p2, int p3);
+	 virtual ~Actor();
 
-	 t_actor_type getType()
-		{return m_iType;}
+	 actor_type getType()
+		{return type_;}
 	 
 	 char* getName()
-		{return m_cName;}
+		{return name_;}
 	 
 	 int getValue()
-		{return m_iValue;}
+		{return value_;}
 
 	 int getPin()
-		{ return m_iPin1;}
+		{ return pin1_;}
 
 	 int setPin(int p)
 	 {
-		 m_iPin1 = p;
-		 pinMode(m_iPin1, OUTPUT);
+		 pin1_ = p;
+		 pinMode(pin1_, OUTPUT);
 		 return true;
 	 }
 	
 	 virtual bool setValue(int v);
 
 protected:
-		int m_iValue;
-		int m_iPin1;
-		int	m_iPin2;
-		int	m_iPin3;
+		int value_;
+		int pin1_;
+		int	pin2_;
+		int	pin3_;
 
 };
 #endif

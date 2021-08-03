@@ -9,6 +9,7 @@
 #endif
 
 #include <EEPROM.h>
+//#include "EEPROM.h"
 #include "RGBLed.h"
 
 unsigned short eepromSize = EEPROM.length() - 1;

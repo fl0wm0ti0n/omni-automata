@@ -28,19 +28,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="touchSensor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="actor.h">
+    <ClInclude Include="Actor.h">
       <Filter>Files\InOut\actors</Filter>
     </ClInclude>
-    <ClInclude Include="analogOut.h">
+    <ClInclude Include="AnalogOut.h">
       <Filter>Files\InOut\actors</Filter>
     </ClInclude>
-    <ClInclude Include="digitalOut.h">
+    <ClInclude Include="DigitalOut.h">
       <Filter>Files\InOut\actors</Filter>
     </ClInclude>
-    <ClInclude Include="neopixel.h">
+    <ClInclude Include="Neopixel.h">
       <Filter>Files\InOut\actors</Filter>
     </ClInclude>
     <ClInclude Include="constants.h">
@@ -49,7 +46,7 @@
     <ClInclude Include="logger.h">
       <Filter>Files\Main</Filter>
     </ClInclude>
-    <ClInclude Include="doggle.h">
+    <ClInclude Include="Doggle.h">
       <Filter>Files\Misc</Filter>
     </ClInclude>
     <ClInclude Include="pgmStrToRAM\MemoryFree.h">
@@ -112,21 +109,22 @@
     <ClInclude Include="__vm\.Code.vsarduino.h">
       <Filter>Files\Solution</Filter>
     </ClInclude>
-    <ClInclude Include="decisions.h">
+    <ClInclude Include="Decisions.h">
       <Filter>Files\Controller</Filter>
     </ClInclude>
+    <ClInclude Include="TouchSensor.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="actor.cpp">
+    <ClCompile Include="Actor.cpp">
       <Filter>Files\InOut\actors</Filter>
     </ClCompile>
-    <ClCompile Include="analogOut.cpp">
+    <ClCompile Include="AnalogOut.cpp">
       <Filter>Files\InOut\actors</Filter>
     </ClCompile>
-    <ClCompile Include="digitalOut.cpp">
+    <ClCompile Include="DigitalOut.cpp">
       <Filter>Files\InOut\actors</Filter>
     </ClCompile>
-    <ClCompile Include="doggle.cpp">
+    <ClCompile Include="Doggle.cpp">
       <Filter>Files\Misc</Filter>
     </ClCompile>
     <ClCompile Include="AnalogIn.cpp">
@@ -150,7 +148,7 @@
     <ClCompile Include="logger.cpp">
       <Filter>Files\Main</Filter>
     </ClCompile>
-    <ClCompile Include="neopixel.cpp">
+    <ClCompile Include="Neopixel.cpp">
       <Filter>Files\InOut\actors</Filter>
     </ClCompile>
     <ClCompile Include="DirectionEncoder.cpp">
@@ -171,7 +169,7 @@
     <ClCompile Include="LuxSensor.cpp">
       <Filter>Files\InOut\sensors</Filter>
     </ClCompile>
-    <ClCompile Include="decisions.cpp">
+    <ClCompile Include="Decisions.cpp">
       <Filter>Files\Controller</Filter>
     </ClCompile>
   </ItemGroup>

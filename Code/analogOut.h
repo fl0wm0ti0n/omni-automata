@@ -25,19 +25,19 @@ ATmega8 only support analogWrite() on pins 9, 10, and 11.
 #include "WProgram.h"
 #endif
 
-#include "actor.h"
+#include "Actor.h"
 #include "logger.h"
 
-class analogOut :public actor
+class AnalogOut :public Actor
 {
 	int lightcounter_ = 0;
 	logger* logger_g_;
 
 public:
-	analogOut(char n[], int p);
-	virtual ~analogOut();
+	AnalogOut(char n[], int p);
+	virtual ~AnalogOut();
 	virtual bool setValue(int v);
 	bool doggle();
-	void SlowlyIncreaseOrDecreaseValue(bool sensorResult, int maxValue);
+	void slowly_increase_or_decrease_value(bool sensor_result, int max_value);
 };
 #endif

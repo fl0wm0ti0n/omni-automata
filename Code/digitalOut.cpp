@@ -3,42 +3,41 @@
 // 
 // 
 
-#include "digitalOut.h"
+#include "DigitalOut.h"
 
-digitalOut::digitalOut(char n[], int p)
-	:actor(digitalOut_act, n, p)
+DigitalOut::DigitalOut(char n[], int p)
+	:Actor(digitalOut_act, n, p)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";
 	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
 #endif
-
-	actor::setValue(digitalRead(p));
+	Actor::setValue(digitalRead(p));
 }
 
-digitalOut::~digitalOut()
+DigitalOut::~DigitalOut()
 {
 }
 
-bool digitalOut::setValue(int v)
+bool DigitalOut::setValue(int v)
 {
 #ifdef DEBUG
-	static const char* const buffer PROGMEM = "Call - digitalOut - setValue";
+	static const char* const buffer PROGMEM = "Call - DigitalOut - setValue";
 	logger_g_->LnWriteLog(buffer, extremedebug);
 #endif
 
 	if (getValue() != v)
 	{
-		actor::setValue(v);
+		Actor::setValue(v);
 		digitalWrite(getPin(),v);
 	}
 	return true;
 }
 
-bool digitalOut::doggle()
+bool DigitalOut::doggle()
 {
 #ifdef DEBUG
-	static const char* const buffer PROGMEM = "Call - digitalOut - doggle";
+	static const char* const buffer PROGMEM = "Call - DigitalOut - Doggle";
 	logger_g_->LnWriteLog(buffer, extremedebug);
 #endif
 

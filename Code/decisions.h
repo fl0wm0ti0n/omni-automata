@@ -14,7 +14,7 @@
 
 #include "logger.h"
 
-enum t_decision_type
+enum decision_type
 {
 	undefined		= 0,
 	lightOn			= 1,
@@ -23,37 +23,40 @@ enum t_decision_type
 	toEffect		= 4
 };
 
-class decisions
+class Decisions
 {
 
 private:
 
-	t_decision_type	m_iType;
-	String m_cName;
+	decision_type	type_;
+	char*			name_;
+	logger*			logger_g_;
 
 	// Variablen für Lichtklassen
-	int lightcounter = 0;
-
+	int lightcounter_ = 0;
+	int lightdoggle_ = 0;
+	int lightswitch_ = 0;
+	
 	// Temp Color
-	int colorium = 0;
+	int colorium_ = 0;
 
 public:
-	decisions(t_decision_type t, String n);
-	virtual ~decisions();
+	Decisions(decision_type t, char n[]);
+	virtual ~Decisions();
 
-	int colorTemperaturChange(float temp, float hum, logger &log);
-	int LichtKomplettSchalten_SobaldImpuls(bool o_sensor, int o_actor, logger &log);
-	int lichtAnSolangeInputImpulsAn(bool o_sensor, logger &log);
-	int LichtAnSolangeInputImpulsAn_AusErlaubtNach255(bool o_sensor, int o_actor, logger &log);
+	int color_temperatur_change(float temp, float hum);
+	void licht_komplett_schalten_sobald_impuls(bool o_sensor, int o_actor);
+	int licht_an_solange_input_impuls_an(bool o_sensor);
+	int licht_an_solange_input_impuls_an_aus_erlaubt_nach255(bool o_sensor, int o_actor);
 
-	t_decision_type getType()
+	decision_type getType()
 	{
-		return m_iType;
+		return type_;
 	}
 
-	String getName()
+	char* getName()
 	{
-		return m_cName;
+		return name_;
 	}
 };
 #endif

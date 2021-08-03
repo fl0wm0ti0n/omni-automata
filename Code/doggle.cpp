@@ -4,45 +4,45 @@
 // @date           12.2016
 // @brief          flip a Value
 
-#include "doggle.h"
+#include "Doggle.h"
 
-int doggle::iflip = false;
-int doggle::iflop = false;
+int Doggle::flip_ = false;
+int Doggle::flop_ = false;
 
-doggle::doggle()
+Doggle::Doggle()
 {
-	iReturnValue = false;
+	return_value_ = false;
 }
 
-doggle::~doggle()
+Doggle::~Doggle()
 {
 
 }
 
-int doggle::flip(int iValue)
+int Doggle::flip(int iValue)
 {
 
 	//********************** routine ************************
 	if (iValue == HIGH)
 	{
-		if (!iflop)
+		if (!flop_)
 		{
-			iflop = true;
-			iflip = !iflip;
+			flop_ = true;
+			flip_ = !flip_;
 
-			if (iflip)
+			if (flip_)
 			{
-				iReturnValue = true;
+				return_value_ = true;
 			}
 			else
 			{
-				iReturnValue = false;
+				return_value_ = false;
 			}
 		}
 	}
 	else
 	{
-		iflop = false;
+		flop_ = false;
 	}
-	return iReturnValue;
+	return return_value_;
 }

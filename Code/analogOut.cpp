@@ -3,23 +3,23 @@
 // @date           08.2019
 // @brief          class for analog output
 
-#include "analogOut.h"
+#include "AnalogOut.h"
 #include "logger.h"
 
-analogOut::analogOut(char n[], int p)
-	:actor(analogOut_act, n, p)
+AnalogOut::AnalogOut(char n[], int p)
+	:Actor(analogOut_act, n, p)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";
 	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
 #endif
-	actor::setValue(analogRead(p));
+	Actor::setValue(analogRead(p));
 }
 
-analogOut::~analogOut()
+AnalogOut::~AnalogOut()
 = default;
 
-bool analogOut::setValue(int v)
+bool AnalogOut::setValue(int v)
 {
 #ifdef DEBUG
 	static const char* const buffer PROGMEM = "Call - analogOut - setValue";
@@ -29,30 +29,30 @@ bool analogOut::setValue(int v)
 
 	if (getValue() != v)
 	{
-		actor::setValue(v);
+		Actor::setValue(v);
 		analogWrite(getPin(), v);
 	}
 	return true;
 }
 
-bool analogOut::doggle()
+bool AnalogOut::doggle()
 {
-	static const char* const buffer PROGMEM = "Call - analogOut - doggle";
+	static const char* const buffer PROGMEM = "Call - analogOut - Doggle";
 	logger_g_->LnWriteLog(buffer, extremedebug);
 	return setValue(!getValue());
 }
 
-void analogOut::SlowlyIncreaseOrDecreaseValue(bool sensorResult, int maxValue)
+void AnalogOut::slowly_increase_or_decrease_value(bool sensor_result, int max_value)
 {
 #ifdef DEBUG
 	static const char* const buffer PROGMEM = "Call - LEDSlowlyInDecreaseValue";
 	logger_g_->WriteLog(buffer, extremedebug);
 #endif
-	if (sensorResult)
+	if (sensor_result)
 	{
-		if (lightcounter_ != maxValue)
+		if (lightcounter_ != max_value)
 		{
-			if (lightcounter_ < maxValue)
+			if (lightcounter_ < max_value)
 			{
 				lightcounter_++;
 #ifdef DEBUG

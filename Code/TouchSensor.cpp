@@ -170,3 +170,15 @@ void TouchSensor::setAnalogTreshold(float threshold)
 #endif
 	threshold_ = threshold;
 }
+
+float TouchSensor::getAnalogTreshold()
+{
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - touch - getAnalogTreshold";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
+	return threshold_;
+}

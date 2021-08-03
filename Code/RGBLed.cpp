@@ -19,7 +19,7 @@ RGBLed::~RGBLed()
 = default;
 
 RGBLed::RGBLed(short redp, short greenp, short bluep, bool common, char name[])
-	: actor(RGB_act, name, redp, greenp, bluep)
+	: Actor(RGB_act, name, redp, greenp, bluep)
 {
 	common_ = common;
 
@@ -167,14 +167,14 @@ void RGBLed::color(short red, short green, short blue)
 	blue_ = blue;
 	
 	if (common_ == COMMON_ANODE) {
-		analogWrite(m_iPin1, ~red);
-		analogWrite(m_iPin2, ~green);
-		analogWrite(m_iPin3, ~blue);
+		analogWrite(pin1_, ~red);
+		analogWrite(pin2_, ~green);
+		analogWrite(pin3_, ~blue);
 	}
 	else {
-		analogWrite(m_iPin1, red);
-		analogWrite(m_iPin2, green);
-		analogWrite(m_iPin3, blue);
+		analogWrite(pin1_, red);
+		analogWrite(pin2_, green);
+		analogWrite(pin3_, blue);
 	}
 }
 
@@ -221,9 +221,9 @@ void RGBLed::fade(short red, short green, short blue, short steps, short duratio
 	green_ = green;
 	blue_ = blue;
 	float brightness = float(value) / 255.f;
-	if (red > 0 && red <= 255) analogWrite(m_iPin1, red * brightness);
-	if (green > 0 && green <= 255) analogWrite(m_iPin2, green * brightness);
-	if (blue > 0 && blue <= 255) analogWrite(m_iPin3, blue * brightness);
+	if (red > 0 && red <= 255) analogWrite(pin1_, red * brightness);
+	if (green > 0 && green <= 255) analogWrite(pin2_, green * brightness);
+	if (blue > 0 && blue <= 255) analogWrite(pin3_, blue * brightness);
 
 	delay((unsigned long)(duration / steps));
 }

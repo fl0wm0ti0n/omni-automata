@@ -24,16 +24,22 @@ int numstops = round(255 / NUM_LEDS_1);
 CRGB ledsA[NUM_LEDS_1];
 HSVHue previousColor;
 
-inline CRGB* neopixelobjekt(int brightness, logger &log)
+inline CRGB* neopixelobjekt(int brightness)
 {
-	log.writeLog("Setup WS2812B...", debug);
+#ifdef DEBUG
+	logger* logger_g_;
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+	static const char* const buffer PROGMEM = "Setup WS2812B...";
+	logger_g_->LnWriteLog(buffer, debug);
+#endif
 	LEDS.setBrightness(brightness);
 	LEDS.addLeds<WS2812B, PIN_WS2812_1, GRB>(ledsA, NUM_LEDS_1);
 	//memset(ledsA, 0, NUM_LEDS_1 * sizeof(struct CRGB));
 	return ledsA;
 }
 
-inline void colorshift(int onoff, logger &log)
+inline void colorshift(int onoff)
 {
 	switch (onoff)
 	{
@@ -60,7 +66,7 @@ inline void colorshift(int onoff, logger &log)
 	delay(idelay);
 }
 
-inline void rainbow_effect(int onoff, logger &log)
+inline void rainbow_effect(int onoff)
 {
 	switch (onoff)
 	{
@@ -88,7 +94,7 @@ inline void rainbow_effect(int onoff, logger &log)
 	delay(idelay);
 }
 
-inline void LED_TempColor2(String color, logger &log)
+inline void LED_TempColor2(String color)
 {
 	int rnd[NUM_LEDS_1];
 	int rndbright[NUM_LEDS_1];
@@ -98,9 +104,14 @@ inline void LED_TempColor2(String color, logger &log)
 	int ledbright[NUM_LEDS_1 / 4];
 	HSVHue colorium = {};
 
-
-	Serial.print("Range= ");
-	Serial.println(quarterRange);
+#ifdef DEBUG
+	logger* logger_g_;
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+	static const char* const buffer PROGMEM = "Range= ";
+	logger_g_->LnWriteLog(buffer, debug);
+	logger_g_->WriteLog(quarterRange, debug);
+#endif
 
 	if (color == "arctic") { colorium = HUE_AQUA; }
 	else if (color == "blue") { colorium = HUE_BLUE; }
@@ -121,25 +132,41 @@ inline void LED_TempColor2(String color, logger &log)
 				rnd[j] = rand() % NUM_LEDS_1;
 			}
 		}
-
-		Serial.print("Random= ");
-		Serial.println(rnd[j]);
+#ifdef DEBUG
+		logger* logger_g_;
+		static char* const buffer PROGMEM = "Logging1";
+		logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+		static const char* const buffer PROGMEM = "Random= ";
+		logger_g_->LnWriteLog(buffer, debug);
+		logger_g_->WriteLog(rnd[j], debug);
+#endif
 	}
 
 	// Randomwert für Start-Helligkeit erzeugen
 	for (int j = 0;j <= quarterRange; j++)
 	{
 		rndbright[j] = rand() % 255;
-
-		Serial.print("RandomBright= ");
-		Serial.println(rndbright[j]);
+#ifdef DEBUG
+		logger* logger_g_;
+		static char* const buffer PROGMEM = "Logging1";
+		logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+		static const char* const buffer PROGMEM = "RandomBright= ";
+		logger_g_->LnWriteLog(buffer, debug);
+		logger_g_->WriteLog(rndbright[j], debug);
+#endif
 	}
 
 	// Schleife für helligkeit Up
 	for (int i = 0;i <= 255; i++)
 	{
-		Serial.print("brightnessUpLoop= ");
-		Serial.println(i);
+#ifdef DEBUG
+		logger* logger_g_;
+		static char* const buffer PROGMEM = "Logging1";
+		logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+		static const char* const buffer PROGMEM = "brightnessUpLoop= ";
+		logger_g_->LnWriteLog(buffer, debug);
+		logger_g_->WriteLog(i, debug);
+#endif
 		for (int j = 0;j <= quarterRange; j++)
 		{
 			if (i <= rndbright[j])
@@ -190,9 +217,14 @@ inline void LED_TempColor2(String color, logger &log)
 	// Schleife für helligkeit Down
 	for (int x = 255;x >= 0; x--)
 	{
-		Serial.print("brightnessDownLoop= ");
-		Serial.println(x);
-
+#ifdef DEBUG
+		logger* logger_g_;
+		static char* const buffer PROGMEM = "Logging1";
+		logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+		static const char* const buffer PROGMEM = "brightnessDownLoop= ";
+		logger_g_->LnWriteLog(buffer, debug);
+		logger_g_->WriteLog(x, debug);
+#endif
 		for (int j = 0;j <= quarterRange; j++)
 		{
 			if (rndbright[j] - 1 >= 0)
@@ -220,7 +252,6 @@ inline void LED_TempColor3(String color, logger &log)
 	else if (color == "yellow") { colorium = HUE_YELLOW; }
 	else if (color == "orange") { colorium = HUE_ORANGE; }
 	else if (color == "red") { colorium = HUE_RED; }
-
 
 	for (int j = 0;j <= number; j++)
 	{
@@ -258,7 +289,6 @@ inline void LED_TempColor4(String color, logger &log)
 	int lightupleds[NUM_LEDS_1];
 	int lightoffleds[NUM_LEDS_1];
 
-
 	if (color == "arctic") { colorium = HUE_AQUA; }
 	else if (color == "blue") { colorium = HUE_BLUE; }
 	else if (color == "green") { colorium = HUE_GREEN; }
@@ -266,7 +296,13 @@ inline void LED_TempColor4(String color, logger &log)
 	else if (color == "orange") { colorium = HUE_ORANGE; }
 	else if (color == "red") { colorium = HUE_RED; }
 
-	Serial.println("WS2812_FadeToTargetColor");
+#ifdef DEBUG
+	logger* logger_g_;
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+	static const char* const buffer PROGMEM = "WS2812_FadeToTargetColor";
+	logger_g_->LnWriteLog(buffer, debug);
+#endif
 
 	while (true)
 	{
@@ -276,8 +312,14 @@ inline void LED_TempColor4(String color, logger &log)
 
 			for (int i = 0;i <= range; i++)
 			{
-				Serial.println("Init RND and Arrays");
-
+#ifdef DEBUG
+				logger* logger_g_;
+				static char* const buffer PROGMEM = "Logging1";
+				logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+				static const char* const buffer PROGMEM = "Init RND and Arrays";
+				logger_g_->LnWriteLog(buffer, debug);
+#endif
+				
 				rndstart[i] = rand() % 255;
 				rndledArray[i] = i;
 				lightupleds[i] = NULL;
@@ -289,8 +331,13 @@ inline void LED_TempColor4(String color, logger &log)
 		{
 			for (int j = 0;j <= range; j++)
 			{
-				Serial.println("Init lightupleds");
-
+#ifdef DEBUG
+				logger* logger_g_;
+				static char* const buffer PROGMEM = "Logging1";
+				logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+				static const char* const buffer PROGMEM = "Init lightupleds";
+				logger_g_->LnWriteLog(buffer, debug);
+#endif
 				for (int i = 0;i <= 255; i++)
 				{
 					if (i == rndstart[j])
@@ -318,8 +365,14 @@ inline void LED_TempColor4(String color, logger &log)
 
 		for (int blubb : lightupleds)
 		{
-			Serial.print("lightupleds loop = ");
-			Serial.println(lightupleds[blubb]);
+#ifdef DEBUG
+			logger* logger_g_;
+			static char* const buffer PROGMEM = "Logging1";
+			logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+			static const char* const buffer PROGMEM = "lightupleds loop = ";
+			logger_g_->LnWriteLog(buffer, debug);
+			logger_g_->WriteLog(lightupleds[blubb], debug);
+#endif
 
 			if (lightupleds[blubb] != NULL)
 			{
@@ -327,8 +380,14 @@ inline void LED_TempColor4(String color, logger &log)
 				{
 					//lightupleds[blubb] = lightupleds[blubb] + 1;
 					rndstart[blubb] = rndstart[blubb] + 1;
-					Serial.print("rndstart = ");
-					Serial.println(rndstart[blubb]);
+#ifdef DEBUG
+					logger* logger_g_;
+					static char* const buffer PROGMEM = "Logging1";
+					logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+					static const char* const buffer PROGMEM = "rndstart = ";
+					logger_g_->LnWriteLog(buffer, debug);
+					logger_g_->WriteLog(rndstart[blubb], debug);
+#endif
 				}
 				else
 				{
@@ -340,8 +399,14 @@ inline void LED_TempColor4(String color, logger &log)
 
 		for (int blubb : lightoffleds)
 		{
-			Serial.print("lightoffleds loop = ");
-			Serial.println(lightoffleds[blubb]);
+#ifdef DEBUG
+			logger* logger_g_;
+			static char* const buffer PROGMEM = "Logging1";
+			logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+			static const char* const buffer PROGMEM = "lightoffleds loop = ";
+			logger_g_->LnWriteLog(buffer, debug);
+			logger_g_->WriteLog(lightoffleds[blubb], debug);
+#endif
 
 			if (lightoffleds[blubb] != NULL)
 			{
@@ -349,8 +414,14 @@ inline void LED_TempColor4(String color, logger &log)
 				{
 					//lightoffleds[blubb] = lightupleds[blubb] + 1;
 					rndstart[blubb] = rndstart[blubb] - 1;
-					Serial.print("rndstart = ");
-					Serial.println(rndstart[blubb]);
+#ifdef DEBUG
+					logger* logger_g_;
+					static char* const buffer PROGMEM = "Logging1";
+					logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+					static const char* const buffer PROGMEM = "rndstart = ";
+					logger_g_->LnWriteLog(buffer, debug);
+					logger_g_->WriteLog(rndstart[blubb], debug);
+#endif
 				}
 				else
 				{
@@ -362,8 +433,14 @@ inline void LED_TempColor4(String color, logger &log)
 
 		for (int blubb : rndstart)
 		{
-			Serial.println("show LEDS loop");
-			Serial.println(rndstart[blubb]);
+#ifdef DEBUG
+			logger* logger_g_;
+			static char* const buffer PROGMEM = "Logging1";
+			logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+			static const char* const buffer PROGMEM = "show LEDS loop";
+			logger_g_->LnWriteLog(buffer, debug);
+			logger_g_->WriteLog(rndstart[blubb], debug);
+#endif
 
 			ledsA[blubb] = CHSV(colorium, 255, rndstart[blubb]);
 			LEDS.show();
@@ -375,7 +452,14 @@ inline void LED_TempColor4(String color, logger &log)
 // Langsamer übergang von einer zu nächsten farbe
 inline void WS2812_FadeToTargetColor(float temp, float hum, logger &log)
 {
-	log.writeLog("Call - WS2812_FadeToTargetColor", debug);
+#ifdef DEBUG
+	logger* logger_g_;
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+	static const char* const buffer PROGMEM = "Call - WS2812_FadeToTargetColor";
+	logger_g_->LnWriteLog(buffer, debug);
+#endif
+
 	int range = NUM_LEDS_1;
 	int blubb = 0;
 	int fromblubb = 0;
@@ -383,21 +467,37 @@ inline void WS2812_FadeToTargetColor(float temp, float hum, logger &log)
 	String color;
 
 	// In decisions verschieben:
-	if (			  temp	<= 20 && hum <= 50)	{ log.writeLog("Set color 'arctic'", debug);	colorium = HUE_AQUA; blubb = 128; }
-	if (temp >	20 && temp	<= 23 && hum <= 50) { log.writeLog("Set color 'blue'",	debug);		colorium = HUE_BLUE;  blubb = 160; }
-	if (temp >	23 && temp	<= 25 && hum >	55)	{ log.writeLog("Set color 'green'",	debug);		colorium = HUE_GREEN;  blubb = 96; }
-	if (temp >	25 && temp	<= 27 && hum >= 60) { log.writeLog("Set color 'yellow'", debug);	colorium = HUE_YELLOW; blubb = 64; }
-	if (temp >	27 && temp	<= 30 && hum >= 70) { log.writeLog("Set color 'orange'", debug);	colorium = HUE_ORANGE; blubb = 32; }
-	if (temp >	30				  && hum >= 80) { log.writeLog("Set color 'red'", debug);		colorium = HUE_RED; blubb = 0; }
+	if (			  temp	<= 20 && hum <= 50)	{ colorium = HUE_AQUA; blubb = 128; }
+	if (temp >	20 && temp	<= 23 && hum <= 50) { colorium = HUE_BLUE;  blubb = 160; }
+	if (temp >	23 && temp	<= 25 && hum >	55)	{ colorium = HUE_GREEN;  blubb = 96; }
+	if (temp >	25 && temp	<= 27 && hum >= 60) { colorium = HUE_YELLOW; blubb = 64; }
+	if (temp >	27 && temp	<= 30 && hum >= 70) { colorium = HUE_ORANGE; blubb = 32; }
+	if (temp >	30				  && hum >= 80) { colorium = HUE_RED; blubb = 0; }
 
+#ifdef DEBUG
+	logger* logger_g_;
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+	static const char* const buffer PROGMEM = "Set color: ";
+	logger_g_->LnWriteLog(buffer, debug);
+	logger_g_->WriteLog(colorium, debug);
+#endif
+	
 	// Entfernen und von neopixels nutzen
 	if (colorium != previousColor)
 	{
 		if (fromblubb < blubb)
 		{
 			for (int i = fromblubb;i <= blubb; i++)
-			{;
-			log.writeLog("TColor - blubb++: " + String(i), extremedebug);
+			{
+#ifdef DEBUG
+				logger* logger_g_;
+				static char* const buffer PROGMEM = "Logging1";
+				logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+				static const char* const buffer PROGMEM = "TColor - blubb++: ";
+				logger_g_->LnWriteLog(buffer, debug);
+				logger_g_->WriteLog(i, debug);
+#endif
 				for (int element = 0;element <= range; element++)
 				{
 					//log.writeLog("TColor - show leds: " + String(element), extremedebug);
@@ -411,7 +511,14 @@ inline void WS2812_FadeToTargetColor(float temp, float hum, logger &log)
 		{
 			for (int i = fromblubb;i >= blubb; i--)
 			{
-				log.writeLog("TColor - blubb--: " + String(i), extremedebug);
+#ifdef DEBUG
+				logger* logger_g_;
+				static char* const buffer PROGMEM = "Logging1";
+				logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+				static const char* const buffer PROGMEM = "TColor - blubb--: ";
+				logger_g_->LnWriteLog(buffer, debug);
+				logger_g_->WriteLog(i, debug);
+#endif
 				for (int element = 0;element <= range; element++)
 				{
 					//log.writeLog("TColor - show leds: " + String(element), extremedebug);

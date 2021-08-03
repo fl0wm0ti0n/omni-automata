@@ -43,10 +43,6 @@ class TouchSensor : public Sensor
 		bool	getState();											// Method: get Touch Value - Gibt True oder False zurück
 		bool	getStateWithDoggle();								// Method: get Touch Value - Gibt True oder False zurück, aber immer gedoggelt.
 		void	setAnalogTreshold(float threshold);					// Method: set Analog Treshold - Setzt den Grenzwert ab wann Analog als True gewertet wird.
-		float	getAnalogTreshold()									// Method: get Analog Treshold - Liest den Grenzwert aus.
-		{
-			logging_one.writeLog("Call - touch - getAnalogTreshold", extremedebug);
-			return threshold_;
-		};
+		float	getAnalogTreshold();								// Method: get Analog Treshold - Liest den Grenzwert aus.
 };
 #endif

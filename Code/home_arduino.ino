@@ -14,11 +14,11 @@
 #include "FastLED.h"
 #include <DHT.h>
 #include "MotionSensor.h"
-#include "analogOut.h"
+#include "AnalogOut.h"
 #include "DhtSensor.h"
 #include "logger.h"
-#include "decisions.h"
-#include "neopixel.h"
+#include "Decisions.h"
+#include "Neopixel.h"
 #include "DirectionEncoder.h"
 #include "PinChangeInt.h"
 #include "pgmStrToRAM/MemoryFree.h"
@@ -29,12 +29,12 @@
 //*******************************************************
 // Objekte welche sofort benötigt werden.
 logger* Logging_one = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, "Logging1");
-analogOut LightStripe_one("lightstripe 1", PIN_PWM_1);
-neopixel WS2812Stripe("WS2812", PIN_WS2812_1, NUM_LEDS_1);
+AnalogOut LightStripe_one("lightstripe 1", PIN_PWM_1);
+Neopixel WS2812Stripe("WS2812", PIN_WS2812_1, NUM_LEDS_1);
 MotionSensor Motionsensor_one("motionsensor 1", PIN_MOTION_1);
 DhtSensor DHTSensor_one("dhtsensor 1", PIN_HUM_1);
 //decisions LightUpStripe(lightOn,"LichtAnAus");
-decisions ChangeColor(colorChange, "FarbeNachTemp");
+Decisions ChangeColor(colorChange, "FarbeNachTemp");
 DirectionEncoder encoder_one("RichtungsEncoder", PIN_ENCODER_SW, PIN_ENCODER_CLK, PIN_ENCODER_DT);
 
 // Variablen deklarieren in denen die Startzeiten
@@ -59,7 +59,7 @@ void motionCheckForLight()
 	Logging_one->LnWriteLog("Call - motionCheckForLight", extremedebug);
 	bool motionResult = Motionsensor_one.getValue();
 	//bool motionResult = encoder_one.getSwitchLongValue(Logging_one);
-	LightStripe_one.SlowlyIncreaseOrDecreaseValue(motionResult, DEFAULT_MAXVALUE);
+	LightStripe_one.slowly_increase_or_decrease_value(motionResult, DEFAULT_MAXVALUE);
 }
 
 void motionCheckForNeopixel()
@@ -72,13 +72,13 @@ void motionCheckForNeopixel()
 void dhtCheck()
 {
 	Logging_one->WriteLog("Call - dhtCheck", extremedebug);
-	bool motionResult = Motionsensor_one.getValue(Logging_one);
-	float hum = DHTSensor_one.getHumValueOnlyIfChanged(Logging_one);
-	float temp = DHTSensor_one.getTempValueOnlyIfChanged(Logging_one);
+	bool motionResult = Motionsensor_one.getValue();
+	float hum = DHTSensor_one.getHumValueOnlyIfChanged();
+	float temp = DHTSensor_one.getTempValueOnlyIfChanged();
 
 	if (motionResult == true)
 	{
-		WS2812Stripe.setHue(DEFAULT_ALLLEDS, ChangeColor.colorTemperaturChange(temp, hum, Logging_one), Logging_one);
+		WS2812Stripe.setHue(DEFAULT_ALLLEDS, ChangeColor.color_temperatur_change(temp, hum));
 	}
 }
 
@@ -101,15 +101,33 @@ void dhtCheck()
 //*******************************************************
 void setup()
 {
-	Logging_one.writeLog(F("Setup Begin"), debug);
-	WS2812Stripe.InitNeoPixel(DEFAULT_MAXVALUE, DEFAULT_MAXVALUE, Logging_one);
-	encoder_one.setClickValue(0.5, Logging_one);
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= debug)
+	{
+		static const char* const buffer PROGMEM = "Setup Begin";
+		logger_g_->LnWriteLog(buffer, debug);
+	}
+#endif
+	WS2812Stripe.InitNeoPixel(DEFAULT_MAXVALUE, DEFAULT_MAXVALUE);
+	encoder_one.setClickValue(0.5);
 	WS2812Stripe.setStep(0.05);
-	Logging_one.writeLog(F("Setup End"), debug);
-	WS2812Stripe.setValues(-1,0, 0, 255, Logging_one);
-	WS2812Stripe.InitExitRandomPulse(Logging_one);
-	Logging_one.writeLog("Free Memory: " + String(freeMemory()), error);
-
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= debug)
+	{
+		static const char* const buffer PROGMEM = "Setup End";
+		logger_g_->LnWriteLog(buffer, debug);
+	}
+#endif
+	WS2812Stripe.setValues(-1,0, 0, 255);
+	WS2812Stripe.InitExitRandomPulse();
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= debug)
+	{
+		static const char* const buffer PROGMEM = "Free Memory: ";
+		logger_g_->LnWriteLog(buffer, debug);
+		logger_g_->LnWriteLog(freeMemory(), debug);
+	}
+#endif
 //******************** Interrupts ***********************
 /*
 attachInterrupt
@@ -135,13 +153,13 @@ void loop()
 	if (millis() - startzeit_4 >= laufzeit_1)
 	{
 		startzeit_4 = millis();
-		WS2812Stripe.colorshift(encoder_one.getEncoderValue(Logging_one), true, Logging_one);
+		WS2812Stripe.colorshift(encoder_one.getEncoderValue(), true);
 	}
 
 	if (millis() - startzeit_3 >= laufzeit_50)
 	{
 		startzeit_3 = millis();
-		WS2812Stripe.randomPulse(Logging_one);
+		WS2812Stripe.randomPulse();
 	}
 
 	// Alle 100 Millisekunden...
@@ -155,7 +173,14 @@ void loop()
 	if (millis() - startzeit_2 >= laufzeit_2k5)
 	{
 		startzeit_2 = millis();
-		Logging_one.writeLog("Free Memory: " + String(freeMemory()), error);
+#ifdef DEBUG
+		if (logger_g_->GetLogLevel() >= debug)
+		{
+			static const char* const buffer PROGMEM = "Free Memory: ";
+			logger_g_->LnWriteLog(buffer, debug);
+			logger_g_->LnWriteLog(freeMemory(), debug);
+		}
+#endif
 	}
 
 	// Alle 500 Millisekunden...

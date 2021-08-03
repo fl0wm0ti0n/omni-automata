@@ -3,29 +3,29 @@
 // @date           01.2017
 // @brief          baseclass of all actors
 
-#include "actor.h"
+#include "Actor.h"
 
-actor::actor(t_actor_type t, char n[], int p)
-	:m_iType(t), m_cName(n), m_iValue(0), m_iPin1(p)
+Actor::Actor(actor_type t, char n[], int p)
+	:type_(t), name_(n), value_(0), pin1_(p)
 {
-	pinMode(m_iPin1, OUTPUT);
+	pinMode(pin1_, OUTPUT);
 }
 
-actor::actor(t_actor_type t, char n[], int p1, int p2, int p3)
-	: m_iType(t), m_cName(n), m_iValue(0), m_iPin1(p1), m_iPin2(p2), m_iPin3(p3)
+Actor::Actor(actor_type t, char n[], int p1, int p2, int p3)
+	: type_(t), name_(n), value_(0), pin1_(p1), pin2_(p2), pin3_(p3)
 {
-	pinMode(m_iPin1, OUTPUT);
-	pinMode(m_iPin2, OUTPUT);
-	pinMode(m_iPin3, OUTPUT);
+	pinMode(pin1_, OUTPUT);
+	pinMode(pin2_, OUTPUT);
+	pinMode(pin3_, OUTPUT);
 }
 
-actor::~actor()
+Actor::~Actor()
 {
 
 }
 
-bool actor::setValue(int v)
+bool Actor::setValue(int v)
 {
-	m_iValue = v;
+	value_ = v;
 	return true;
 }

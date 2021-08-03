@@ -8,9 +8,9 @@
 #else
 	#include "WProgram.h"
 #endif
-#include "actor.h"
+#include "Actor.h"
 
-class RGBLed : actor
+class RGBLed : Actor
 {
 
 public:

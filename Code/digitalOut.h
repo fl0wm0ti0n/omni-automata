@@ -7,19 +7,17 @@
 	#include "WProgram.h"
 #endif
 
-#include "actor.h"
+#include "Actor.h"
 #include "logger.h"
 
-class digitalOut:public actor
+class DigitalOut:public Actor
 {
 	logger* logger_g_;
 	
 public:
-	 digitalOut(char n[], int p);
-	 virtual ~digitalOut();
-
+	 DigitalOut(char n[], int p);
+	 virtual ~DigitalOut();
 	 virtual bool setValue(int v);
-
 	 bool doggle();
 };
 

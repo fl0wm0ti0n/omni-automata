@@ -1,28 +1,38 @@
-#include "decisions.h"
+#include "Decisions.h"
 #include "constants.h"
 
-decisions::decisions(t_decision_type t, String n)
-	:m_iType(t), m_cName(n)
+Decisions::Decisions(decision_type t, char n[])
+	:type_(t), name_(n)
 {
+#ifdef DEBUG
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+#endif
 }
 
-decisions::~decisions()
+Decisions::~Decisions()
 = default;
 
 // TEMPERATUR LICHT
 // Licht nach Temperatur muss sich sofort einschalten auch ohne Änderung bei Temperatur aber nur wenn es das erste mal startet also Bewegung erkannt wird.
 // Licht muss sofort im korrekten Farbwert starten.
 
-int decisions::colorTemperaturChange(float temp, float hum, logger &log)
+int Decisions::color_temperatur_change(float temp, float hum)
 {
-	log.writeLog("Call - colorTempChange", extremedebug);
-	if (CHANGEHUE_AQUA)		{ colorium = 128; }
-	if (CHANGEHUE_BLUE)		{ colorium = 160; }
-	if (CHANGEHUE_GREEN)	{ colorium = 96; }
-	if (CHANGEHUE_YELLOW)	{ colorium = 64; }
-	if (CHANGEHUE_ORANGE)	{ colorium = 32; }
-	if (CHANGEHUE_RED)		{ colorium = 0; }
-	return colorium;
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - colorTempChange";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
+	if (CHANGEHUE_AQUA)		{ colorium_ = 128; }
+	if (CHANGEHUE_BLUE)		{ colorium_ = 160; }
+	if (CHANGEHUE_GREEN)	{ colorium_ = 96; }
+	if (CHANGEHUE_YELLOW)	{ colorium_ = 64; }
+	if (CHANGEHUE_ORANGE)	{ colorium_ = 32; }
+	if (CHANGEHUE_RED)		{ colorium_ = 0; }
+	return colorium_;
 }
 
 // Wenn Bewegung "light up" bis das Licht ganz an ist nach einer am Motionsensor eingestellten Zeit geht das licht wieder aus.
@@ -65,194 +75,240 @@ int decisions::colorTemperaturChange(float temp, float hum, logger &log)
 // Impuls effect
 // Mit Motionsensor justierbar
 // Mainloop und millis abhängig (nichts muss auf diesen Prozess warten)
-int decisions::lichtAnSolangeInputImpulsAn(bool o_sensor, logger &log)
+int Decisions::licht_an_solange_input_impuls_an(bool o_sensor)
 {
-	log.writeLog("Call - lichtAnSolangeInputImpulsAn", extremedebug);
-
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - lichtAnSolangeInputImpulsAn";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
 	if (o_sensor == true)
 	{
-		if (lightcounter != 255)
+		if (lightcounter_ != 255)
 		{
-			if (lightcounter < 255)
+			if (lightcounter_ < 255)
 			{
-				lightcounter++;
-				log.writeLog("Licht an - " + String(lightcounter), debug);
+				lightcounter_++;
+#ifdef DEBUG
+				if (logger_g_->GetLogLevel() >= sensordata)
+				{
+					static const char* const buffer PROGMEM = "Licht an - ";
+					logger_g_->LnWriteLog(buffer, sensordata);
+					logger_g_->WriteLog(lightcounter_, sensordata);
+				}
+#endif
 			}
 		}
 	}
 	else
 	{
-		if (lightcounter != 0)
+		if (lightcounter_ != 0)
 		{
-			if (lightcounter > 0)
+			if (lightcounter_ > 0)
 			{
-				lightcounter--;
-				log.writeLog("Licht aus - " + String(lightcounter), debug);
+				lightcounter_--;
+#ifdef DEBUG
+				if (logger_g_->GetLogLevel() >= sensordata)
+				{
+					static const char* const buffer PROGMEM = "Licht aus - ";
+					logger_g_->LnWriteLog(buffer, sensordata);
+					logger_g_->WriteLog(lightcounter_, sensordata);
+				}
+#endif
 			}
 		}
 	}
-	return lightcounter;
+	return lightcounter_;
 }
 
 
 // Wenn Bewegung "light up" bis volle Stärke - erst danach "light off"
 // NICHT mit Motionsensor justierbar
 // Mainloop und millis abhängig (nichts muss auf diesen Prozess warten)
-/*int decisions::LqichtAnSolangeInputImpulsAn_AusErlaubtNach255(bool o_sensor, int o_actor, logger &log)
+int Decisions::licht_an_solange_input_impuls_an_aus_erlaubt_nach255(bool o_sensor, int o_actor)
 {
-	log.writeLog("Call - LichtAnSolangeInputImpulsAn_AusErlaubtNach255", extremedebug);
-
-	if (LightStripe_one.getValue() != 255 && lightdoggle == 0)
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
 	{
-		if (LightStripe_one.getValue() <= 255 && Motionsensor_one.getValue(Logging_one) == true)
+		static const char* const buffer PROGMEM = "Call - LichtAnSolangeInputImpulsAn_AusErlaubtNach255";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
+	if (LightStripe_one.getValue() != 255 && lightdoggle_ == 0)
+	{
+		if (LightStripe_one.getValue() <= 255 && Motionsensor_one.getValue() == true)
 		{
-			lightcounter++;
-			LightStripe_one.setValue(lightcounter, Logging_one);
-			lightdoggle = 0;
-			lightswitch = 0;
-			log.writeLog("Licht an - " + String(lightcounter), debug);
+			lightcounter_++;
+			LightStripe_one.setValue(lightcounter_);
+			lightdoggle_ = 0;
+			lightswitch_ = 0;
+#ifdef DEBUG
+			if (logger_g_->GetLogLevel() >= sensordata)
+			{
+				static const char* const buffer PROGMEM = "Licht an - ";
+				logger_g_->LnWriteLog(buffer, sensordata);
+				logger_g_->WriteLog(lightcounter_, sensordata);
+			}
+#endif
 		}
-		else if (lightcounter <= 255 && Motionsensor_one.getValue(Logging_one) == false)
+		else if (lightcounter_ <= 255 && Motionsensor_one.getValue() == false)
 		{
-			LightStripe_one.setValue(lightcounter, Logging_one);
-			if (lightswitch == 0) { lightcounter++; }
-			log.writeLog("Licht an - " + String(lightcounter), debug);
+			LightStripe_one.setValue(lightcounter_);
+			if (lightswitch_ == 0) { lightcounter_++; }
+#ifdef DEBUG
+			if (logger_g_->GetLogLevel() >= sensordata)
+			{
+				static const char* const buffer PROGMEM = "Licht an - ";
+				logger_g_->LnWriteLog(buffer, sensordata);
+				logger_g_->WriteLog(lightcounter_, sensordata);
+			}
+#endif
 		}
 	}
 	else
 	{
-		lightdoggle = 1;
+		lightdoggle_ = 1;
 	}
 
-	if (LightStripe_one.getValue() != 0 && lightdoggle == 1 && Motionsensor_one.getValue(Logging_one) == false)
+	if (LightStripe_one.getValue() != 0 && lightdoggle_ == 1 && Motionsensor_one.getValue() == false)
 	{
 		if (LightStripe_one.getValue() > 0)
 		{
-			lightcounter--;
-			LightStripe_one.setValue(lightcounter, Logging_one);
-			lightdoggle = 1;
-			lightswitch = 1;
-			log.writeLog("Licht aus - " + String(lightcounter), debug);
+			lightcounter_--;
+			LightStripe_one.setValue(lightcounter_);
+			lightdoggle_ = 1;
+			lightswitch_ = 1;
+#ifdef DEBUG
+			if (logger_g_->GetLogLevel() >= sensordata)
+			{
+				static const char* const buffer PROGMEM = "Licht an - ";
+				logger_g_->LnWriteLog(buffer, sensordata);
+				logger_g_->WriteLog(lightcounter_, sensordata);
+			}
+#endif
 		}
 	}
 	else
 	{
-		lightdoggle = 0;
+		lightdoggle_ = 0;
 	}
-	return lightcounter;
-}*/
-	/*
+	return lightcounter_;
+}
+	
 	// Wenn Bewegung "light up" bis das Licht ganz an ist nach einer am Motionsensor eingestellten Zeit geht das licht wieder aus.
 	// Mainloop und millis unabhängig (alles muss auf diesen Prozess warten)
-	void decisions::LichtKomplettSchalten_SobaldImpuls(bool o_sensor, int o_actor, logger &log)
-	{
-		log.writeLog("Call - LichtKomplettSchalten_SobaldImpuls", extremedebug);
+	//void Decisions::licht_komplett_schalten_sobald_impuls(bool o_sensor, int o_actor)
+	//{
+	//	log.writeLog("Call - LichtKomplettSchalten_SobaldImpuls", extremedebug);
 
-		if (Motionsensor_one.getValue(Logging_one) == true)
-		{
-			if (LightStripe_one.getValue() != 255)
-			{
-				for (int i = 0; i <= 255; ++i)
-				{
-					LightStripe_one.setValue(i, Logging_one);
-					delay(DEFAULT_LIGHTFDELAY);
-					log.writeLog("Licht an - " + String(LightStripe_one.getValue()), debug);
-				}
-				LightStripe_one.setValue(255, Logging_one);
-			}
-		}
-		else
-		{
-			if (LightStripe_one.getValue() != 0)
-			{
+	//	if (Motionsensor_one.getValue() == true)
+	//	{
+	//		if (LightStripe_one.getValue() != 255)
+	//		{
+	//			for (int i = 0; i <= 255; ++i)
+	//			{
+	//				LightStripe_one.setValue(i);
+	//				delay(DEFAULT_LIGHTFDELAY);
+	//				log.writeLog("Licht an - " + String(LightStripe_one.getValue()), debug);
+	//			}
+	//			LightStripe_one.setValue(255);
+	//		}
+	//	}
+	//	else
+	//	{
+	//		if (LightStripe_one.getValue() != 0)
+	//		{
 
-				for (int j = 255; j >= 0; --j)
-				{
-					LightStripe_one.setValue(j, Logging_one);
-					delay(DEFAULT_LIGHTFDELAY);
-					log.writeLog("Licht aus - " + String(LightStripe_one.getValue()), debug);
-				}
-				LightStripe_one.setValue(0, Logging_one);
-			}
-		}
-	}
+	//			for (int j = 255; j >= 0; --j)
+	//			{
+	//				LightStripe_one.setValue(j);
+	//				delay(DEFAULT_LIGHTFDELAY);
+	//				log.writeLog("Licht aus - " + String(LightStripe_one.getValue()), debug);
+	//			}
+	//			LightStripe_one.setValue(0);
+	//		}
+	//	}
+	//}
 
 	// Wenn Bewegung "light up" - sobald keine Bewegung "light down"
 	// Impuls effect
 	// Mit Motionsensor justierbar
 	// Mainloop und millis abhängig (nichts muss auf diesen Prozess warten)
-	void decisions::lichtAnSolangeInputImpulsAn(Sensor o_sensor, actor o_actor, logger &log)
-	{
+	//void Decisions::licht_an_solange_input_impuls_an(Sensor o_sensor, actor o_actor)
+	//{
 
-		log.writeLog("Call - lichtAnSolangeInputImpulsAn", extremedebug);
+	//	log.writeLog("Call - lichtAnSolangeInputImpulsAn", extremedebug);
 
-		if (Motionsensor_one.getValue(Logging_one) == true)
-		{
-			if (LightStripe_one.getValue() != 255)
-			{
-				if (LightStripe_one.getValue() <= 255)
-				{
-					lightcounter++;
-					LightStripe_one.setValue(lightcounter, Logging_one);
-					log.writeLog("Licht an - " + String(lightcounter), debug);
-				}
-			}
-		}
-		else
-		{
-			if (LightStripe_one.getValue() != 0)
-			{
-				if (LightStripe_one.getValue() >= 0)
-				{
-					lightcounter--;
-					LightStripe_one.setValue(lightcounter, Logging_one);
-					log.writeLog("Licht an - " + String(lightcounter), debug);
-				}
-			}
-		}
-	}
+	//	if (Motionsensor_one.getValue() == true)
+	//	{
+	//		if (LightStripe_one.getValue() != 255)
+	//		{
+	//			if (LightStripe_one.getValue() <= 255)
+	//			{
+	//				lightcounter_++;
+	//				LightStripe_one.setValue(lightcounter_);
+	//				log.writeLog("Licht an - " + String(lightcounter_), debug);
+	//			}
+	//		}
+	//	}
+	//	else
+	//	{
+	//		if (LightStripe_one.getValue() != 0)
+	//		{
+	//			if (LightStripe_one.getValue() >= 0)
+	//			{
+	//				lightcounter_--;
+	//				LightStripe_one.setValue(lightcounter_);
+	//				log.writeLog("Licht an - " + String(lightcounter_), debug);
+	//			}
+	//		}
+	//	}
+	//}
 
 	// Wenn Bewegung "light up" bis volle Stärke - erst danach "light off"
 	// NICHT mit Motionsensor justierbar
 	// Mainloop und millis abhängig (nichts muss auf diesen Prozess warten)
-	void decisions::LichtAnSolangeInputImpulsAn_AusErlaubtNach255(Sensor o_sensor, actor o_actor, logger &log)
-	{
-		log.writeLog("Call - LichtAnSolangeInputImpulsAn_AusErlaubtNach255", extremedebug);
+	//void Decisions::licht_an_solange_input_impuls_an_aus_erlaubt_nach255(Sensor o_sensor, actor o_actor)
+	//{
+	//	log.writeLog("Call - LichtAnSolangeInputImpulsAn_AusErlaubtNach255", extremedebug);
 
-		if (LightStripe_one.getValue() != 255 && lightdoggle == 0)
-		{
-			if (LightStripe_one.getValue() <= 255 && Motionsensor_one.getValue(log) == true)
-			{
-				lightcounter++;
-				LightStripe_one.setValue(lightcounter, Logging_one);
-				lightdoggle = 0;
-				lightswitch = 0;
-				log.writeLog("Licht an - " + String(lightcounter), debug);
-			}
-			else if (lightcounter <= 255 && Motionsensor_one.getValue(log) == false)
-			{
-				LightStripe_one.setValue(lightcounter, Logging_one);
-				if (lightswitch == 0) { lightcounter++; }
-				log.writeLog("Licht an - " + String(lightcounter), debug);
-			}
-		}
-		else
-		{
-			lightdoggle = 1;
-		}
+	//	if (LightStripe_one.getValue() != 255 && lightdoggle_ == 0)
+	//	{
+	//		if (LightStripe_one.getValue() <= 255 && Motionsensor_one.getValue() == true)
+	//		{
+	//			lightcounter_++;
+	//			LightStripe_one.setValue(lightcounter_);
+	//			lightdoggle_ = 0;
+	//			lightswitch_ = 0;
+	//			log.writeLog("Licht an - " + String(lightcounter_), debug);
+	//		}
+	//		else if (lightcounter_ <= 255 && Motionsensor_one.getValue() == false)
+	//		{
+	//			LightStripe_one.setValue(lightcounter_);
+	//			if (lightswitch_ == 0) { lightcounter_++; }
+	//			log.writeLog("Licht an - " + String(lightcounter_), debug);
+	//		}
+	//	}
+	//	else
+	//	{
+	//		lightdoggle_ = 1;
+	//	}
 
-		if (LightStripe_one.getValue() != 0 && lightdoggle == 1 && Motionsensor_one.getValue(log) == false)
-		{
-			if (LightStripe_one.getValue() > 0)
-			{
-				lightcounter--;
-				LightStripe_one.setValue(lightcounter, log);
-				lightdoggle = 1;
-				lightswitch = 1;
-				log.writeLog("Licht aus - " + String(lightcounter), debug);
-			}
-		}
-		else
-		{
-			lightdoggle = 0;
-		}*/
+	//	if (LightStripe_one.getValue() != 0 && lightdoggle_ == 1 && Motionsensor_one.getValue() == false)
+	//	{
+	//		if (LightStripe_one.getValue() > 0)
+	//		{
+	//			lightcounter_--;
+	//			LightStripe_one.setValue(lightcounter_);
+	//			lightdoggle_ = 1;
+	//			lightswitch_ = 1;
+	//			log.writeLog("Licht aus - " + String(lightcounter_), debug);
+	//		}
+	//	}
+	//	else
+	//	{
+	//		lightdoggle_ = 0;
+	//	}
+	//}

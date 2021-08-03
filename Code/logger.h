@@ -209,8 +209,9 @@ void logger::LnWriteLog(T value, log_level llevel)
 //#ifdef MEMINFO_
 //	Serial << endl << "Free Memory: " << free_memory() << endl;
 //#endif
-	if (GetLogLevel() != disabled)
+	if (log_lvl_ != disabled && log_lvl_ >= llevel)
 	{
+
 		//char* creturn = GetTypeofAndCovertToChar(value);
 		//char buffering[sizeof(creturn) + 2];
 		//strcpy(buffering, creturn);
@@ -227,7 +228,7 @@ void logger::WriteLogLn(T value, log_level llevel)
 //#ifdef MEMINFO_
 //	Serial << endl << "Free Memory: " << free_memory() << endl;
 //#endif
-	if (GetLogLevel() != disabled)
+	if (log_lvl_ != disabled && log_lvl_ >= llevel)
 	{
 		//char* creturn = GetTypeofAndCovertToChar(value);
 		//char buffering[sizeof(creturn) + 2];
@@ -245,7 +246,7 @@ void logger::WriteLog(T value, log_level llevel)
 //#ifdef MEMINFO_
 //	Serial << endl << "Free Memory: " << free_memory() << endl;
 //#endif
-	if (GetLogLevel() != disabled)
+	if (log_lvl_ != disabled && log_lvl_ >= llevel)
 	{
 		FinalHandleLog(NULL, value, llevel, false);
 	}

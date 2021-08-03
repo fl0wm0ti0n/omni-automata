@@ -83,21 +83,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnalogIn.h" />
-    <ClInclude Include="decisions.h" />
-    <ClInclude Include="actor.h" />
-    <ClInclude Include="analogOut.h" />
+    <ClInclude Include="Decisions.h" />
+    <ClInclude Include="Actor.h" />
+    <ClInclude Include="AnalogOut.h" />
     <ClInclude Include="DhtSensor.h" />
     <ClInclude Include="DigitalIn.h" />
     <ClInclude Include="DirectionEncoder.h" />
-    <ClInclude Include="doggle.h" />
+    <ClInclude Include="Doggle.h" />
     <ClInclude Include="constants.h" />
-    <ClInclude Include="digitalOut.h" />
+    <ClInclude Include="DigitalOut.h" />
     <ClInclude Include="GasSensor.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="MemoryInfo.h" />
     <ClInclude Include="MotionSensor.h" />
-    <ClInclude Include="neopixel.h" />
+    <ClInclude Include="Neopixel.h" />
     <ClInclude Include="pgmStrToRAM\MemoryFree.h" />
     <ClInclude Include="pgmStrToRAM\pgmStrToRAM.h" />
     <ClInclude Include="PinChangeInt.h" />
@@ -113,18 +113,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnalogIn.cpp" />
-    <ClCompile Include="decisions.cpp" />
-    <ClCompile Include="actor.cpp" />
-    <ClCompile Include="analogOut.cpp" />
+    <ClCompile Include="Decisions.cpp" />
+    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="AnalogOut.cpp" />
     <ClCompile Include="DhtSensor.cpp" />
     <ClCompile Include="DigitalIn.cpp" />
     <ClCompile Include="DirectionEncoder.cpp" />
-    <ClCompile Include="doggle.cpp" />
-    <ClCompile Include="digitalOut.cpp" />
+    <ClCompile Include="Doggle.cpp" />
+    <ClCompile Include="DigitalOut.cpp" />
     <ClCompile Include="GasSensor.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="MotionSensor.cpp" />
-    <ClCompile Include="neopixel.cpp" />
+    <ClCompile Include="Neopixel.cpp" />
     <ClCompile Include="pgmStrToRAM\MemoryFree.cpp" />
     <ClCompile Include="pgmStrToRAM\pgmStrToRAM.cpp" />
     <ClCompile Include="RGBLed.cpp" />
