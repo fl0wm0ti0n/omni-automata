@@ -47,11 +47,11 @@ int Decisions::color_temperatur_change(float temp, float hum)
 		{
 			for (int i = 0; i <= 255; ++i)
 			{
-				LightStripe_one.setValue(i, Logging_one);
+				LightStripe_one.setValue(i, logging_one);
 				delay(DEFAULT_LIGHTFDELAY);
 				log.writeLog("Licht an - " + String(LightStripe_one.getValue()), debug);
 			}
-			LightStripe_one.setValue(255, Logging_one);
+			LightStripe_one.setValue(255, logging_one);
 		}
 	}
 	else
@@ -61,11 +61,11 @@ int Decisions::color_temperatur_change(float temp, float hum)
 
 			for (int j = 255; j >= 0; --j)
 			{
-				LightStripe_one.setValue(j, Logging_one);
+				LightStripe_one.setValue(j, logging_one);
 				delay(DEFAULT_LIGHTFDELAY);
 				log.writeLog("Licht aus - " + String(LightStripe_one.getValue()), debug);
 			}
-			LightStripe_one.setValue(0, Logging_one);
+			LightStripe_one.setValue(0, logging_one);
 		}
 	}
 	return lightcounter;
@@ -136,12 +136,12 @@ int Decisions::licht_an_solange_input_impuls_an_aus_erlaubt_nach255(bool o_senso
 		logger_g_->LnWriteLog(buffer, extremedebug);
 	}
 #endif
-	if (LightStripe_one.getValue() != 255 && lightdoggle_ == 0)
+	if (lightstripe_one.getValue() != 255 && lightdoggle_ == 0)
 	{
-		if (LightStripe_one.getValue() <= 255 && Motionsensor_one.getValue() == true)
+		if (lightstripe_one.getValue() <= 255 && motionsensor_one.getValue() == true)
 		{
 			lightcounter_++;
-			LightStripe_one.setValue(lightcounter_);
+			lightstripe_one.setValue(lightcounter_);
 			lightdoggle_ = 0;
 			lightswitch_ = 0;
 #ifdef DEBUG
@@ -153,9 +153,9 @@ int Decisions::licht_an_solange_input_impuls_an_aus_erlaubt_nach255(bool o_senso
 			}
 #endif
 		}
-		else if (lightcounter_ <= 255 && Motionsensor_one.getValue() == false)
+		else if (lightcounter_ <= 255 && motionsensor_one.getValue() == false)
 		{
-			LightStripe_one.setValue(lightcounter_);
+			lightstripe_one.setValue(lightcounter_);
 			if (lightswitch_ == 0) { lightcounter_++; }
 #ifdef DEBUG
 			if (logger_g_->GetLogLevel() >= sensordata)
@@ -172,12 +172,12 @@ int Decisions::licht_an_solange_input_impuls_an_aus_erlaubt_nach255(bool o_senso
 		lightdoggle_ = 1;
 	}
 
-	if (LightStripe_one.getValue() != 0 && lightdoggle_ == 1 && Motionsensor_one.getValue() == false)
+	if (lightstripe_one.getValue() != 0 && lightdoggle_ == 1 && motionsensor_one.getValue() == false)
 	{
-		if (LightStripe_one.getValue() > 0)
+		if (lightstripe_one.getValue() > 0)
 		{
 			lightcounter_--;
-			LightStripe_one.setValue(lightcounter_);
+			lightstripe_one.setValue(lightcounter_);
 			lightdoggle_ = 1;
 			lightswitch_ = 1;
 #ifdef DEBUG

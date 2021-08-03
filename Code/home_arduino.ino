@@ -28,13 +28,13 @@
 //********************* DECLARATION *********************
 //*******************************************************
 // Objekte welche sofort benötigt werden.
-logger* Logging_one = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, "Logging1");
-AnalogOut LightStripe_one("lightstripe 1", PIN_PWM_1);
-Neopixel WS2812Stripe("WS2812", PIN_WS2812_1, NUM_LEDS_1);
-MotionSensor Motionsensor_one("motionsensor 1", PIN_MOTION_1);
-DhtSensor DHTSensor_one("dhtsensor 1", PIN_HUM_1);
+logger* logging_one = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, "Logging1");
+AnalogOut lightstripe_one("lightstripe 1", PIN_PWM_1);
+Neopixel ws2812_stripe("WS2812", PIN_WS2812_1, NUM_LEDS_1);
+MotionSensor motionsensor_one("motionsensor 1", PIN_MOTION_1);
+DhtSensor dht_sensor_one("dhtsensor 1", PIN_HUM_1);
 //decisions LightUpStripe(lightOn,"LichtAnAus");
-Decisions ChangeColor(colorChange, "FarbeNachTemp");
+Decisions change_color(colorChange, "FarbeNachTemp");
 DirectionEncoder encoder_one("RichtungsEncoder", PIN_ENCODER_SW, PIN_ENCODER_CLK, PIN_ENCODER_DT);
 
 // Variablen deklarieren in denen die Startzeiten
@@ -56,29 +56,29 @@ volatile uint16_t interruptCount = 0;*/
 
 void motionCheckForLight()
 {
-	Logging_one->LnWriteLog("Call - motionCheckForLight", extremedebug);
-	bool motionResult = Motionsensor_one.getValue();
-	//bool motionResult = encoder_one.getSwitchLongValue(Logging_one);
-	LightStripe_one.slowly_increase_or_decrease_value(motionResult, DEFAULT_MAXVALUE);
+	logging_one->LnWriteLog("Call - motionCheckForLight", extremedebug);
+	bool motionResult = motionsensor_one.getValue();
+	//bool motionResult = encoder_one.getSwitchLongValue(logging_one);
+	lightstripe_one.slowly_increase_or_decrease_value(motionResult, DEFAULT_MAXVALUE);
 }
 
 void motionCheckForNeopixel()
 {
-	Logging_one->WriteLog("Call - motionCheckForNeopixel", extremedebug);
-	int motionResult = Motionsensor_one.getValue();
-	WS2812Stripe.SlowlyIncreaseOrDecreaseBrightness(DEFAULT_ALLLEDS, motionResult, DEFAULT_MAXVALUE);
+	logging_one->WriteLog("Call - motionCheckForNeopixel", extremedebug);
+	int motionResult = motionsensor_one.getValue();
+	ws2812_stripe.SlowlyIncreaseOrDecreaseBrightness(DEFAULT_ALLLEDS, motionResult, DEFAULT_MAXVALUE);
 }
 
 void dhtCheck()
 {
-	Logging_one->WriteLog("Call - dhtCheck", extremedebug);
-	bool motionResult = Motionsensor_one.getValue();
-	float hum = DHTSensor_one.getHumValueOnlyIfChanged();
-	float temp = DHTSensor_one.getTempValueOnlyIfChanged();
+	logging_one->WriteLog("Call - dhtCheck", extremedebug);
+	bool motionResult = motionsensor_one.getValue();
+	float hum = dht_sensor_one.getHumValueOnlyIfChanged();
+	float temp = dht_sensor_one.getTempValueOnlyIfChanged();
 
 	if (motionResult == true)
 	{
-		WS2812Stripe.setHue(DEFAULT_ALLLEDS, ChangeColor.color_temperatur_change(temp, hum));
+		ws2812_stripe.setHue(DEFAULT_ALLLEDS, change_color.color_temperatur_change(temp, hum));
 	}
 }
 
@@ -108,9 +108,9 @@ void setup()
 		logger_g_->LnWriteLog(buffer, debug);
 	}
 #endif
-	WS2812Stripe.InitNeoPixel(DEFAULT_MAXVALUE, DEFAULT_MAXVALUE);
+	ws2812_stripe.InitNeoPixel(DEFAULT_MAXVALUE, DEFAULT_MAXVALUE);
 	encoder_one.setClickValue(0.5);
-	WS2812Stripe.setStep(0.05);
+	ws2812_stripe.setStep(0.05);
 #ifdef DEBUG
 	if (logger_g_->GetLogLevel() >= debug)
 	{
@@ -118,8 +118,8 @@ void setup()
 		logger_g_->LnWriteLog(buffer, debug);
 	}
 #endif
-	WS2812Stripe.setValues(-1,0, 0, 255);
-	WS2812Stripe.InitExitRandomPulse();
+	ws2812_stripe.setValues(-1,0, 0, 255);
+	ws2812_stripe.InitExitRandomPulse();
 #ifdef DEBUG
 	if (logger_g_->GetLogLevel() >= debug)
 	{
@@ -153,13 +153,13 @@ void loop()
 	if (millis() - startzeit_4 >= laufzeit_1)
 	{
 		startzeit_4 = millis();
-		WS2812Stripe.colorshift(encoder_one.getEncoderValue(), true);
+		ws2812_stripe.colorshift(encoder_one.getEncoderValue(), true);
 	}
 
 	if (millis() - startzeit_3 >= laufzeit_50)
 	{
 		startzeit_3 = millis();
-		WS2812Stripe.randomPulse();
+		ws2812_stripe.randomPulse();
 	}
 
 	// Alle 100 Millisekunden...
@@ -194,15 +194,15 @@ void loop()
 	/*if (millis() - startzeit_3 >= laufzeit_250)
 	{
 		startzeit_3 = millis();
-		if (!encoder_one.getSwitchValue(Logging_one))
+		if (!encoder_one.getSwitchValue(logging_one))
 		{
-			WS2812Stripe.twinkleRandom(-1, false, Logging_one);
+			ws2812_stripe.twinkleRandom(-1, false, logging_one);
 		}
 		else
 		{
-			if (!WS2812Stripe.GetHue() == 0x00)
+			if (!ws2812_stripe.GetHue() == 0x00)
 			{
-				WS2812Stripe.setValues(-1, 0x00, 0x00, 0x00, Logging_one);
+				ws2812_stripe.setValues(-1, 0x00, 0x00, 0x00, logging_one);
 			}
 
 		}

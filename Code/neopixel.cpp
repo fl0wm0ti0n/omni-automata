@@ -274,7 +274,14 @@ void Neopixel::fadeToTargetColor(short led, byte hue)
 #endif
 				for (byte element = 0;element <= range_; element++)
 				{
-					//Logging_one.writeLog("TColor - show leds: " + String(element), extremedebug);
+#ifdef DEBUG
+					if (logger_g_->GetLogLevel() >= extremedebug)
+					{
+						static const char* const buffer PROGMEM = "TColor - show leds: ";
+						logger_g_->LnWriteLog(buffer, extremedebug);
+						logger_g_->WriteLog(element, extremedebug);
+					}
+#endif
 					ledsA_[element] = CHSV(i, 255, 255);
 				}
 
@@ -294,7 +301,14 @@ void Neopixel::fadeToTargetColor(short led, byte hue)
 #endif
 				for (byte element = 0;element <= range_; element++)
 				{
-					//Logging_one.writeLog("TColor - show leds: " + String(element), extremedebug);
+#ifdef DEBUG
+					if (logger_g_->GetLogLevel() >= extremedebug)
+					{
+						static const char* const buffer PROGMEM = "TColor - show leds: ";
+						logger_g_->LnWriteLog(buffer, extremedebug);
+						logger_g_->WriteLog(element, extremedebug);
+					}
+#endif
 					ledsA_[element] = CHSV(i, 255, 255);
 				}
 			}
