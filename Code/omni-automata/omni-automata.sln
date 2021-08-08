@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "home_arduino", "home_arduino.vcxproj", "{21B6700D-F499-4838-B2DA-4E22D3D8FD5B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "omni-automata", "omni-automata.vcxproj", "{21B6700D-F499-4838-B2DA-4E22D3D8FD5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -25,7 +25,6 @@
 #include "PinChangeInt.h"
 #include "pgmStrToRAM/MemoryFree.h"
 #include "pgmStrToRAM/pgmStrToRAM.h"
-#include "stdint.h"
 
 //*******************************************************
 //********************* DECLARATION *********************
@@ -59,7 +58,6 @@ volatile uint16_t interruptCount = 0;*/
 
 void motionCheckForLight()
 {
-	uint16_t test;
 	logging_one->LnWriteLog("Call - motionCheckForLight", extremedebug);
 	bool motionResult = motionsensor_one.getValue();
 	//bool motionResult = encoder_one.getSwitchLongValue(logging_one);

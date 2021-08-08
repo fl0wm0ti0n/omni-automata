@@ -109,10 +109,6 @@
     <ClInclude Include="Decisions.h">
       <Filter>Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="TouchSensor.h" />
-    <ClInclude Include="__vm\.home_arduino.vsarduino.h">
-      <Filter>Files\Solution</Filter>
-    </ClInclude>
     <ClInclude Include="__vm\.Code.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
