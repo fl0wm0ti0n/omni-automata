@@ -1,16 +1,18 @@
-// @file           home_arduino.ino
+// @file           omni-automata.ino
 // @author         flow@p0cki.net
-// @date           12.2016
-// @brief          main routine
+// @date           08.2021
 
-#include <Bounce2.h>
-#include "constants.h"		// Constanten müssen vor allem anderen initialisiert werden
 
 // Wenn als Board das NodeMCU V3 gewählt wurde wird dies entsprechend freigeschalten.
 #if (NodeMCUV3 == true)
 #define FASTLED_ESP8266_NODEMCU_PIN_ORDER
 #endif
 
+#include "constants.h"		// Constanten müssen vor allem anderen initialisiert werden
+#include <Adafruit_TSL2561_U.h>
+#include <Adafruit_Sensor.h>
+#include <Bounce2.h>
+#include <Wire.h>
 #include "FastLED.h"
 #include <DHT.h>
 #include "MotionSensor.h"
@@ -23,6 +25,7 @@
 #include "PinChangeInt.h"
 #include "pgmStrToRAM/MemoryFree.h"
 #include "pgmStrToRAM/pgmStrToRAM.h"
+#include "stdint.h"
 
 //*******************************************************
 //********************* DECLARATION *********************
@@ -56,6 +59,7 @@ volatile uint16_t interruptCount = 0;*/
 
 void motionCheckForLight()
 {
+	uint16_t test;
 	logging_one->LnWriteLog("Call - motionCheckForLight", extremedebug);
 	bool motionResult = motionsensor_one.getValue();
 	//bool motionResult = encoder_one.getSwitchLongValue(logging_one);

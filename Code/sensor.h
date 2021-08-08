@@ -7,37 +7,38 @@
 #define _SENSOR_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+	#include "Arduino.h"
 #else
 	#include "WProgram.h"
 #endif
 
 #include "logger.h"
 
-enum t_sensor_type
+enum sensor_type
 {
 	undefined_sens = 0,
 	digitalIn_sens = 1,
 	analogIn_sens = 2,
 	I2C_sens = 3,
 	DHT_sens = 4,
-	gas_sens = 5
+	gas_sens = 5,
+	ada_sens = 6
 };
 
 class Sensor
 {
 
 private:
-	t_sensor_type sensortype_;
+	sensor_type sensortype_;
 	char* sensorname_;
 	unsigned short sensorvalue_;
 	unsigned short sensorpin_;
 
 public:
-	Sensor(t_sensor_type t, char n[], unsigned short p);
+	Sensor(sensor_type t, char n[], unsigned short p);
 	virtual ~Sensor();
 
-	virtual t_sensor_type getType()
+	virtual sensor_type getType()
 	{return sensortype_;}
 
 	virtual char* getName()

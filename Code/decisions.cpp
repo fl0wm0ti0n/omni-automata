@@ -127,75 +127,75 @@ int Decisions::licht_an_solange_input_impuls_an(bool o_sensor)
 // Wenn Bewegung "light up" bis volle Stärke - erst danach "light off"
 // NICHT mit Motionsensor justierbar
 // Mainloop und millis abhängig (nichts muss auf diesen Prozess warten)
-int Decisions::licht_an_solange_input_impuls_an_aus_erlaubt_nach255(bool o_sensor, int o_actor)
-{
-#ifdef DEBUG
-	if (logger_g_->GetLogLevel() >= extremedebug)
-	{
-		static const char* const buffer PROGMEM = "Call - LichtAnSolangeInputImpulsAn_AusErlaubtNach255";
-		logger_g_->LnWriteLog(buffer, extremedebug);
-	}
-#endif
-	if (lightstripe_one.getValue() != 255 && lightdoggle_ == 0)
-	{
-		if (lightstripe_one.getValue() <= 255 && motionsensor_one.getValue() == true)
-		{
-			lightcounter_++;
-			lightstripe_one.setValue(lightcounter_);
-			lightdoggle_ = 0;
-			lightswitch_ = 0;
-#ifdef DEBUG
-			if (logger_g_->GetLogLevel() >= sensordata)
-			{
-				static const char* const buffer PROGMEM = "Licht an - ";
-				logger_g_->LnWriteLog(buffer, sensordata);
-				logger_g_->WriteLog(lightcounter_, sensordata);
-			}
-#endif
-		}
-		else if (lightcounter_ <= 255 && motionsensor_one.getValue() == false)
-		{
-			lightstripe_one.setValue(lightcounter_);
-			if (lightswitch_ == 0) { lightcounter_++; }
-#ifdef DEBUG
-			if (logger_g_->GetLogLevel() >= sensordata)
-			{
-				static const char* const buffer PROGMEM = "Licht an - ";
-				logger_g_->LnWriteLog(buffer, sensordata);
-				logger_g_->WriteLog(lightcounter_, sensordata);
-			}
-#endif
-		}
-	}
-	else
-	{
-		lightdoggle_ = 1;
-	}
-
-	if (lightstripe_one.getValue() != 0 && lightdoggle_ == 1 && motionsensor_one.getValue() == false)
-	{
-		if (lightstripe_one.getValue() > 0)
-		{
-			lightcounter_--;
-			lightstripe_one.setValue(lightcounter_);
-			lightdoggle_ = 1;
-			lightswitch_ = 1;
-#ifdef DEBUG
-			if (logger_g_->GetLogLevel() >= sensordata)
-			{
-				static const char* const buffer PROGMEM = "Licht an - ";
-				logger_g_->LnWriteLog(buffer, sensordata);
-				logger_g_->WriteLog(lightcounter_, sensordata);
-			}
-#endif
-		}
-	}
-	else
-	{
-		lightdoggle_ = 0;
-	}
-	return lightcounter_;
-}
+//int Decisions::licht_an_solange_input_impuls_an_aus_erlaubt_nach255(bool o_sensor, int o_actor)
+//{
+//#ifdef DEBUG
+//	if (logger_g_->GetLogLevel() >= extremedebug)
+//	{
+//		static const char* const buffer PROGMEM = "Call - LichtAnSolangeInputImpulsAn_AusErlaubtNach255";
+//		logger_g_->LnWriteLog(buffer, extremedebug);
+//	}
+//#endif
+//	if (lightstripe_one.getValue() != 255 && lightdoggle_ == 0)
+//	{
+//		if (lightstripe_one.getValue() <= 255 && motionsensor_one.getValue() == true)
+//		{
+//			lightcounter_++;
+//			lightstripe_one.setValue(lightcounter_);
+//			lightdoggle_ = 0;
+//			lightswitch_ = 0;
+//#ifdef DEBUG
+//			if (logger_g_->GetLogLevel() >= sensordata)
+//			{
+//				static const char* const buffer PROGMEM = "Licht an - ";
+//				logger_g_->LnWriteLog(buffer, sensordata);
+//				logger_g_->WriteLog(lightcounter_, sensordata);
+//			}
+//#endif
+//		}
+//		else if (lightcounter_ <= 255 && motionsensor_one.getValue() == false)
+//		{
+//			lightstripe_one.setValue(lightcounter_);
+//			if (lightswitch_ == 0) { lightcounter_++; }
+//#ifdef DEBUG
+//			if (logger_g_->GetLogLevel() >= sensordata)
+//			{
+//				static const char* const buffer PROGMEM = "Licht an - ";
+//				logger_g_->LnWriteLog(buffer, sensordata);
+//				logger_g_->WriteLog(lightcounter_, sensordata);
+//			}
+//#endif
+//		}
+//	}
+//	else
+//	{
+//		lightdoggle_ = 1;
+//	}
+//
+//	if (lightstripe_one.getValue() != 0 && lightdoggle_ == 1 && motionsensor_one.getValue() == false)
+//	{
+//		if (lightstripe_one.getValue() > 0)
+//		{
+//			lightcounter_--;
+//			lightstripe_one.setValue(lightcounter_);
+//			lightdoggle_ = 1;
+//			lightswitch_ = 1;
+//#ifdef DEBUG
+//			if (logger_g_->GetLogLevel() >= sensordata)
+//			{
+//				static const char* const buffer PROGMEM = "Licht an - ";
+//				logger_g_->LnWriteLog(buffer, sensordata);
+//				logger_g_->WriteLog(lightcounter_, sensordata);
+//			}
+//#endif
+//		}
+//	}
+//	else
+//	{
+//		lightdoggle_ = 0;
+//	}
+//	return lightcounter_;
+//}
 	
 	// Wenn Bewegung "light up" bis das Licht ganz an ist nach einer am Motionsensor eingestellten Zeit geht das licht wieder aus.
 	// Mainloop und millis unabhängig (alles muss auf diesen Prozess warten)

@@ -1,91 +1,149 @@
 /*
  * @file           sensor_lux.cpp
  * @author         flow@p0cki.at
- * @date           04.2016
+ * @date           08.2021
  * @brief          Sensor to measure Lux with the TSL2561.
  */
 
-#include <stdlib.h>
 #include "LuxSensor.h"
-#include <math.h>
-
-
 using namespace std;
 
 //---Constructor--------------------------------------------------------
-sensor_lux::sensor_lux(int iOption, char cAddress)
-	: i2cID(-1)
+LuxSensor::LuxSensor(char n[], int p, gain_config option1, integration_config option2, addr_config option3, int id)
+	: Sensor(sensor_type::I2C_sens, n, p)
 {
-	i2cID = wiringPiI2CSetup(cAddress);					// Sensor initialisieren
+#ifdef DEBUG
+	static char* const buffer PROGMEM = "Logging1";
+	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
+#endif
+
+	switch (option3)
+	{
+	case highaddr:
+		tsl_ = Adafruit_TSL2561_Unified(TSL2561_ADDR_HIGH, id);
+	case lowaddr:
+		tsl_ = Adafruit_TSL2561_Unified(TSL2561_ADDR_LOW, id);
+	case floataddr:
+		tsl_ = Adafruit_TSL2561_Unified(TSL2561_ADDR_FLOAT, id);
+	}
 	
-	wiringPiI2CWriteReg8(i2cID, 0x80, 0x03);			// Sensor einschalten
-	
-	setResolution(iOption);								// Auflösung einstellen
+	configure(option1, option2);								// Auflösung einstellen
+	tsl_.init();
 }
 //---Destructor---------------------------------------------------------
-sensor_lux::~sensor_lux()
+LuxSensor::~LuxSensor()
 {
-	wiringPiI2CWriteReg8(i2cID, 0x80, 0x00);			// Sensor ausschalten
 }	
 
-//---AUFLÖSUNG EINSTELLEN-----------------------------------------------
-void sensor_lux::setResolution(int iOption)
+/**************************************************************************/
+/*
+	Configures the gain and integration time for the TSL2561
+*/
+/**************************************************************************/
+void LuxSensor::configure(gain_config option1, integration_config option2)
 {
-	int cRegister;
-//---Sensor-Auflösung------(default = hoch)
-	switch (iOption) {
-	case 1:
-		cRegister = 0x00;
-		break;
-	case 2:
-		cRegister = 0x01;
-		break;
-	default:
-		cRegister = 0x02;
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - configure";
+		logger_g_->LnWriteLog(buffer, extremedebug);
 	}
-//---Sensorwerte-anfordern
-	wiringPiI2CWriteReg8(i2cID, 0x81, cRegister);		// Auflösung einstellen
-}
-//---Sensorwerte holen--------------------------------------------------
-int sensor_lux::getAmbient()
-{
-	int iLuxHigh =  wiringPiI2CReadReg8(i2cID, 0x8c);
-	int iLuxLow =  wiringPiI2CReadReg8(i2cID, 0x8d);
-	LOG(info, "Amb High: " << iLuxHigh << ", Low: " << iLuxLow);
-	
-	return (iLuxHigh < 0 || iLuxLow < 0)? -1: (iLuxHigh * 256) + iLuxLow ;
+#endif
+
+	configureGain(option1);
+	configureIntegration(option2);
 }
 
-int sensor_lux::getIR()
+void LuxSensor::configureGain(gain_config option1)
 {
-	int iIRHigh =  wiringPiI2CReadReg8(i2cID, 0x8e);
-	int iIRLow =  wiringPiI2CReadReg8(i2cID, 0x8f);
-	LOG(info, "IR High: " << iIRHigh << ", Low: " << iIRLow);
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - configureGain";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
+	switch (option1)
+	{
+	case gain1x:
+		tsl_.setGain(TSL2561_GAIN_1X);
+	case gain16x:
+		tsl_.setGain(TSL2561_GAIN_1X);
+	case gainrangeOn:
+		tsl_.enableAutoRange(true);          /* Auto-gain ... switches automatically between 1x and 16x */
+	case gainrangeOff:
+		tsl_.enableAutoRange(false);          /* Auto-gain ... switches automatically between 1x and 16x */
+	}
+}
+
+void LuxSensor::configureIntegration(integration_config option2)
+{
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - configureIntegration";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
+	switch (option2)
+	{
+	case INTE13MS:
+		tsl_.setIntegrationTime(TSL2561_INTEGRATIONTIME_13MS);      /* fast but low resolution */
+	case INTE101MS:
+		tsl_.setIntegrationTime(TSL2561_INTEGRATIONTIME_101MS);  /* medium resolution and speed   */
+	case INTE402MS:
+		tsl_.setIntegrationTime(TSL2561_INTEGRATIONTIME_402MS);  /* 16-bit data but slowest conversions */
+	}
+}
+
+//---Sensorwerte holen--------------------------------------------------
+void LuxSensor::getLuminosity(unsigned short& amb, unsigned short& inf)
+{
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - getAmbient";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
 	
-	return (iIRHigh < 0 || iIRLow < 0)? -1 : (iIRHigh * 256) + iIRLow;
+	uint16_t broadband = 0;
+	uint16_t infrared = 0;
+	tsl_.getLuminosity(&broadband, &infrared);
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= sensordata)
+	{
+		static const char* const buffer PROGMEM = "Amb: ";
+		logger_g_->LnWriteLog(buffer, sensordata);
+		logger_g_->LnWriteLog(broadband, sensordata);
+		static const char* const buffer PROGMEM = "Inf: ";
+		logger_g_->LnWriteLog(buffer, sensordata);
+		logger_g_->LnWriteLog(infrared, sensordata);
+	}
+#endif
+
 }
 
 //---Lux-Berechnung-----------------------------------------------------
-float sensor_lux::getLux()
+void LuxSensor::getLux(float &lux)
 {
-	int iIR			= getIR();				//führt getIR aus
-	int iLux		= getAmbient();			//führt getAmbient aus
-	float iValue	= iIR / float(iLux);
-	float iValueFin;
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= extremedebug)
+	{
+		static const char* const buffer PROGMEM = "Call - getLux";
+		logger_g_->LnWriteLog(buffer, extremedebug);
+	}
+#endif
 	
-	//Berechnung lt. Datenblatt TSL2561T
-	if (iValue > 0 && iValue <= 0.50)
-		iValueFin = 0.0304	* iLux	- 0.062		* iLux * pow(iValue, 1.4);
-	else if (iValue > 0.50 && iValue <= 0.61)
-		iValueFin = 0.0224	* iLux	- 0.031		* iIR;
-	else if (iValue > 0.61 && iValue <= 0.80)
-		iValueFin = 0.0128	* iLux	- 0.0153	* iIR;
-	else if (iValue > 0.80 && iValue <= 1.3)
-		iValueFin = 0.00146 * iLux	- 0.00112	* iIR;
-	else
-		iValueFin = 0; 
-	LOG(info, "iLux: " << iLux << ", iIR: " << iIR);
-	LOG(info, "iValue: " << iValue);
-	
-	return iValueFin;
+	/* Get a new sensor event */
+	tsl_.getEvent(&event_);	
+	lux = event_.light;
+#ifdef DEBUG
+	if (logger_g_->GetLogLevel() >= sensordata)
+	{
+		static const char* const buffer PROGMEM = "Lux: ";
+		logger_g_->LnWriteLog(buffer, sensordata);
+		logger_g_->LnWriteLog(lux, sensordata);
+	}
+#endif
 }

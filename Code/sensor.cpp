@@ -5,9 +5,8 @@
 // @brief          baseclass of all sensors
 
 #include "Sensor.h"
-#include "constants.h"
 
-Sensor::Sensor(t_sensor_type t, char n[], unsigned short p)
+Sensor::Sensor(sensor_type t, char n[], unsigned short p)
 	:sensortype_(t), sensorname_(n), sensorvalue_(0), sensorpin_(p)
 {
 	Sensor::setPin(sensorpin_);

@@ -106,13 +106,14 @@
     <ClInclude Include="statesController.h">
       <Filter>Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="__vm\.Code.vsarduino.h">
-      <Filter>Files\Solution</Filter>
-    </ClInclude>
     <ClInclude Include="Decisions.h">
       <Filter>Files\Controller</Filter>
     </ClInclude>
     <ClInclude Include="TouchSensor.h" />
+    <ClInclude Include="__vm\.home_arduino.vsarduino.h">
+      <Filter>Files\Solution</Filter>
+    </ClInclude>
+    <ClInclude Include="__vm\.Code.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp">
@@ -174,7 +175,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="home_arduino.ino" />
+    <None Include="omni-automata.ino" />
     <None Include=".gitignore">
       <Filter>Files\Solution</Filter>
     </None>
