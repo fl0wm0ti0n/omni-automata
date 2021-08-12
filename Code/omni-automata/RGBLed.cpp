@@ -19,7 +19,7 @@ RGBLed::~RGBLed()
 = default;
 
 RGBLed::RGBLed(short redp, short greenp, short bluep, bool common, char name[])
-	: Actor(RGB_act, name, redp, greenp, bluep)
+	: Actor(ACTOR_TYP_RGB, ACTOR_SUB_UNDEFINED, name, redp, greenp, bluep)
 {
 	common_ = common;
 

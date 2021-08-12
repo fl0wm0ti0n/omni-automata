@@ -7,7 +7,7 @@
 #include "logger.h"
 
 AnalogOut::AnalogOut(char n[], int p)
-	:Actor(analogOut_act, n, p)
+	:Actor(ACTOR_TYP_ANALOG_OUT, ACTOR_SUB_UNDEFINED, n, p)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";

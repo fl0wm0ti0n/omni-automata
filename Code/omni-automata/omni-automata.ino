@@ -25,6 +25,7 @@
 #include "PinChangeInt.h"
 #include "pgmStrToRAM/MemoryFree.h"
 #include "pgmStrToRAM/pgmStrToRAM.h"
+#include "stdint.h"
 
 //*******************************************************
 //********************* DECLARATION *********************

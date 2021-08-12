@@ -109,7 +109,9 @@
     <ClInclude Include="Decisions.h">
       <Filter>Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="__vm\.Code.vsarduino.h" />
+    <ClInclude Include="__vm\.omni-automata.vsarduino.h">
+      <Filter>Files\Solution</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp">
@@ -171,7 +173,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="omni-automata.ino" />
     <None Include=".gitignore">
       <Filter>Files\Solution</Filter>
     </None>
@@ -179,6 +180,9 @@
       <Filter>Files\Main</Filter>
     </None>
     <None Include="CppProperties.json">
+      <Filter>Files\Solution</Filter>
+    </None>
+    <None Include="omni-automata.ino">
       <Filter>Files\Solution</Filter>
     </None>
   </ItemGroup>

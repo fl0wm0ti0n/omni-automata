@@ -5,13 +5,13 @@
 
 #include "Actor.h"
 
-Actor::Actor(actor_type t, char n[], int p)
-	:type_(t), name_(n), value_(0), pin1_(p)
+Actor::Actor(actor_type t, actor_suhbtype s, char n[], int p)
+	:type_(t), name_(n), value_(0), pin1_(p), id_(current_id++)
 {
 	pinMode(pin1_, OUTPUT);
 }
 
-Actor::Actor(actor_type t, char n[], int p1, int p2, int p3)
+Actor::Actor(actor_type t, actor_suhbtype s, char n[], int p1, int p2, int p3)
 	: type_(t), name_(n), value_(0), pin1_(p1), pin2_(p2), pin3_(p3)
 {
 	pinMode(pin1_, OUTPUT);

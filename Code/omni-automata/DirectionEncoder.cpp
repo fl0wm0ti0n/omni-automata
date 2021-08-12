@@ -1,7 +1,7 @@
 #include "DirectionEncoder.h"
 
 DirectionEncoder::DirectionEncoder(char n[], int pSW, int pCLK, int pDT)
-	:Sensor(digitalIn_sens, n, pSW)
+	:Sensor(SENSOR_TYP_DIGITAL_IN, SENSOR_SUB_MANUALLY, n, pSW)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";

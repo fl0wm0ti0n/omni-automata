@@ -5,7 +5,7 @@
 #include "GasSensor.h"
 
 GasSensor::GasSensor(char n[], int p)
-	:Sensor(sensor_type::analogIn_sens, n, p)
+	:Sensor(SENSOR_TYP_ANALOG_IN, SENSOR_SUB_UNDEFINED, n, p)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";

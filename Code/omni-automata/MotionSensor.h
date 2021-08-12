@@ -19,10 +19,10 @@ private:
 	bool motion_value_ = false;
 
 public:
-	MotionSensor(char n[], int p);		// Constructor
+	MotionSensor(char n[], int p);			// Constructor
 	virtual ~MotionSensor();				// Destructor
 
-	virtual bool getValue();		// Method: get motion Value
+	virtual bool getValue();				// Method: get motion Value
 	bool true_if_status_changed();
 };
 

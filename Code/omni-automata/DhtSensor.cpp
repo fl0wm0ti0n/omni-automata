@@ -7,7 +7,7 @@
 #include "logger.h"
 
 DhtSensor::DhtSensor(char n[], int p)
-	:Sensor(sensor_type::DHT_sens, n, p)
+	:Sensor(SENSOR_TYP_AMBIENT_TEMPERATURE, SENSOR_SUB_DHT, n, p)
 {
 #ifdef DEBUG
 static char* const buffer PROGMEM = "Logging1";

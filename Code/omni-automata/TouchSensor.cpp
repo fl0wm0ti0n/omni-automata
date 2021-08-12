@@ -6,7 +6,7 @@
 #include "TouchSensor.h"
 
 TouchSensor::TouchSensor(char n[], int p)
-	:Sensor(digitalIn_sens, n, p)
+	:Sensor(SENSOR_TYP_DIGITAL_IN, SENSOR_SUB_MANUALLY,n, p)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";

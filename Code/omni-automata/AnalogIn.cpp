@@ -6,7 +6,7 @@
 #include "AnalogIn.h"
 
 AnalogIn::AnalogIn(char n[], unsigned short p)
-	:Sensor(analogIn_sens, n, p)
+	:Sensor(SENSOR_TYP_ANALOG_IN,SENSOR_SUB_UNDEFINED, n, p)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";

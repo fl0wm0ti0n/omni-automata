@@ -6,11 +6,10 @@
  */
 
 #include "LuxSensor.h"
-using namespace std;
 
 //---Constructor--------------------------------------------------------
 LuxSensor::LuxSensor(char n[], int p, gain_config option1, integration_config option2, addr_config option3, int id)
-	: Sensor(sensor_type::I2C_sens, n, p)
+	: Sensor(SENSOR_TYP_LIGHT, SENSOR_SUB_TSL2561, n, p)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";

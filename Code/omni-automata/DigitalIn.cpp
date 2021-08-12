@@ -1,7 +1,7 @@
 #include "DigitalIn.h"
 
 DigitalIn::DigitalIn(char n[], unsigned short p)
-	:Sensor(digitalIn_sens, n, p)
+	:Sensor(SENSOR_TYP_DIGITAL_IN,SENSOR_SUB_UNDEFINED, n, p)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";

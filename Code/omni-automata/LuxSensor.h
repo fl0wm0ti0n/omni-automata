@@ -46,7 +46,7 @@ enum addr_config
 class LuxSensor :public Sensor
 {
 public:
-	LuxSensor(char n[], int p, gain_config option1, integration_config option2, addr_config option3, int id);				// Constructor
+	LuxSensor(char n[], int p, gain_config option1, integration_config option2, addr_config option3, int id);	// Constructor
 	virtual ~LuxSensor();														// Destructor
 	void getLuminosity(unsigned short &amb, unsigned short& inf);				// Method: get Sensor Ambient
 	void getLux(float& lux);													// Method: get Lux out of Sensor Data

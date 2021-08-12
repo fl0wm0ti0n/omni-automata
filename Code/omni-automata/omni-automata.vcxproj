@@ -109,7 +109,6 @@
     <ClInclude Include="Streaming.h" />
     <ClInclude Include="TouchSensor.h" />
     <ClInclude Include="vector.h" />
-    <ClInclude Include="__vm\.Code.vsarduino.h" />
     <ClInclude Include="__vm\.omni-automata.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>

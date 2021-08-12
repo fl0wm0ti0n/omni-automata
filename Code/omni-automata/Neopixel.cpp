@@ -15,7 +15,7 @@
 
 //Constructor
 Neopixel::Neopixel(char name[], byte pin, byte numleds)
-	:Actor(WS2812_act, name, pin)
+	:Actor(ACTOR_TYP_WS2812, ACTOR_SUB_UNDEFINED, name, pin)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";

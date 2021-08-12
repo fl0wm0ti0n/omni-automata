@@ -6,7 +6,7 @@
 #include "DigitalOut.h"
 
 DigitalOut::DigitalOut(char n[], int p)
-	:Actor(digitalOut_act, n, p)
+	:Actor(ACTOR_TYP_DIGITAL_OUT,ACTOR_SUB_UNDEFINED, n, p)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";
