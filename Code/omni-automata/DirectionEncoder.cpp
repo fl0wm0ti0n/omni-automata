@@ -1,19 +1,18 @@
 #include "DirectionEncoder.h"
 
-DirectionEncoder::DirectionEncoder(char n[], int pSW, int pCLK, int pDT)
-	:Sensor(SENSOR_TYP_DIGITAL_IN, SENSOR_SUB_MANUALLY, n, pSW)
+DirectionEncoder::DirectionEncoder(char n[], unsigned short pSW, unsigned short pCLK, unsigned short pDT)
+	:Sensor(SENSOR_TYP_DIGITAL_IN, SENSOR_SUB_MANUALLY, n, sensor_pin_)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";
 	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
 #endif
-	pinCLK_ = pCLK;
-	pinDT_ = pDT;
-	pinSW_ = pSW;
-	pinMode(pinCLK_, INPUT);
-	pinMode(pinDT_, INPUT);
-	pinMode(pinSW_, INPUT);
-	old_clk_val_ = digitalRead(pinCLK_);
+
+	Sensor::sensor_pin_.drei.pin1 = pSW;
+	Sensor::sensor_pin_.drei.pin2 = pCLK;
+	Sensor::sensor_pin_.drei.pin3 = pSW;
+
+	old_clk_val_ = digitalRead(sensor_pin_.drei.pin2);
 }
 
 DirectionEncoder::~DirectionEncoder()
@@ -25,12 +24,12 @@ int DirectionEncoder::getEncoderValue()
 	static const char* const buffer PROGMEM = "Call - GetEncoder";
 	logger_g_->LnWriteLog(buffer, extremedebug);
 #endif
-	clk_val_ = digitalRead(pinCLK_);
+	clk_val_ = digitalRead(getPin().drei.pin2);
 	if (clk_val_ != old_clk_val_) { // Means the knob is rotating
 	  // if the knob is rotating, we need to determine direction
 	  // We do that by reading pin B.
 
-		if (digitalRead(pinDT_) != clk_val_) {  // Means pin A Changed first - We're Rotating Clockwise
+		if (digitalRead(getPin().drei.pin1) != clk_val_) {  // Means pin A Changed first - We're Rotating Clockwise
 			encoder_pos_count_ = encoder_pos_count_ + clicks_;
 			bCW_ = true;
 		}
@@ -94,7 +93,7 @@ bool DirectionEncoder::getValue()
 	logger_g_->LnWriteLog(buffer, extremedebug);
 #endif
 
-	if (digitalRead(getPin()) == HIGH)
+	if (digitalRead(getPin().drei.pin3) == HIGH)
 	{
 #ifdef DEBUG
 		static const char* const buffer PROGMEM = "Switch: is true";
@@ -122,7 +121,7 @@ bool DirectionEncoder::getSwitchValueDoggle()
 	logger_g_->LnWriteLog(buffer, extremedebug);
 #endif
 
-	if (digitalRead(getPin()))
+	if (digitalRead(getPin().drei.pin3))
 	{
 		doggle_state_ = !doggle_state_;
 #ifdef DEBUG
@@ -142,7 +141,7 @@ bool DirectionEncoder::getSwitchLongValue()
 #endif
 
 
-	if (digitalRead(getPin()) == LOW && switch_state2_ != false)
+	if (digitalRead(getPin().drei.pin3) == LOW && switch_state2_ != false)
 	{
 		switch_state2_ = false;
 		switch_value_ = true;
@@ -152,7 +151,7 @@ bool DirectionEncoder::getSwitchLongValue()
 #endif
 	}
 
-	if (digitalRead(getPin()) == HIGH && switch_state2_ != true)
+	if (digitalRead(getPin().drei.pin3) == HIGH && switch_state2_ != true)
 	{
 		switch_state2_ = true;
 		switch_value_ = false;

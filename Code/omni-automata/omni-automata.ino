@@ -21,6 +21,8 @@
 #include "logger.h"
 #include "Decisions.h"
 #include "Neopixel.h"
+#include "IActor.h"
+#include "ISensor.h"
 #include "DirectionEncoder.h"
 #include "PinChangeInt.h"
 #include "pgmStrToRAM/MemoryFree.h"
@@ -104,6 +106,11 @@ void dhtCheck()
 //*******************************************************
 void setup()
 {
+	IActor *alist[3];
+	alist[1] = &lightstripe_one;
+	IActor* actorium = new AnalogOut("test", 1);
+
+	
 #ifdef DEBUG
 	if (logger_g_->GetLogLevel() >= debug)
 	{

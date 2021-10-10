@@ -93,11 +93,14 @@
     <ClInclude Include="constants.h" />
     <ClInclude Include="DigitalOut.h" />
     <ClInclude Include="GasSensor.h" />
+    <ClInclude Include="IActor.h" />
+    <ClInclude Include="ISensor.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="MemoryInfo.h" />
     <ClInclude Include="MotionSensor.h" />
     <ClInclude Include="Neopixel.h" />
+    <ClInclude Include="Neopixel_RandomPulse.h" />
     <ClInclude Include="pgmStrToRAM\MemoryFree.h" />
     <ClInclude Include="pgmStrToRAM\pgmStrToRAM.h" />
     <ClInclude Include="PinChangeInt.h" />
@@ -125,6 +128,7 @@
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="MotionSensor.cpp" />
     <ClCompile Include="Neopixel.cpp" />
+    <ClCompile Include="Neopixel_RandomPulse.cpp" />
     <ClCompile Include="pgmStrToRAM\MemoryFree.cpp" />
     <ClCompile Include="pgmStrToRAM\pgmStrToRAM.cpp" />
     <ClCompile Include="RGBLed.cpp" />

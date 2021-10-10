@@ -182,7 +182,7 @@ inline void LED_TempColor2(String color)
 
 			/*if (rndbright[j] + 1 <= 255)
 			{
-				ledsA_[rnd[j]] = CHSV(colorium_, 255, rndbright[j] + 1);
+				crgbleds_[rnd[j]] = CHSV(colorium_, 255, rndbright[j] + 1);
 
 			}*/
 

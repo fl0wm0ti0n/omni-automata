@@ -6,10 +6,9 @@
 
 #include "Sensor.h"
 
-Sensor::Sensor(sensor_type t, sensor_subtype s, char n[], unsigned short p)
-	:sensortype_(t), sensorsubtype_(s), sensorname_(n), sensorvalue_(0), sensorpin_(p), id_(current_id++)
+Sensor::Sensor(sensor_type t, sensor_subtype s, char n[], sensor_pins p)
+	:event_(), type_(t), subtype_(s), sensorname_(n), sensorvalue_(0), sensor_pin_(p), id_(current_id++)
 {
-	Sensor::setPin(sensorpin_);
 }
 
 Sensor::~Sensor()

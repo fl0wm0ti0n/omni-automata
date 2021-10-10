@@ -15,10 +15,15 @@ class DigitalOut:public Actor
 	logger* logger_g_;
 	
 public:
-	 DigitalOut(char n[], int p);
+	 DigitalOut(char n[], unsigned short p);
 	 virtual ~DigitalOut();
-	 virtual bool setValue(int v);
-	 bool doggle();
+	 bool	doggle();
+
+	 /*common functions*/
+	 bool	fireEvent()						override;
+	 bool	setEvent(actor_event newevent)	override;
+	 //bool	setEvent(float value)			override { return false; }
+	 bool	setEvent(int value)				override;
 };
 
 #endif

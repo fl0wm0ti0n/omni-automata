@@ -3,31 +3,69 @@
 // @date           09.2019
 // @brief          Neopixel Class
 
-
-#include "constants.h"
-#if (NodeMCUV3 == true)
-#define FASTLED_ESP8266_NODEMCU_PIN_ORDER
-#endif
-
 #include "Neopixel.h"
 #include "FastLED.h"
-#include <EEPROM.h>
 
 //Constructor
-Neopixel::Neopixel(char name[], byte pin, byte numleds)
-	:Actor(ACTOR_TYP_WS2812, ACTOR_SUB_UNDEFINED, name, pin)
+Neopixel::Neopixel(char n[], unsigned short p, unsigned short numleds)
+	:Actor(ACTOR_TYP_WS2812, ACTOR_SUB_UNDEFINED, n, p)
 {
 #ifdef DEBUG
 	static char* const buffer PROGMEM = "Logging1";
 	logger_g_ = logger::GetInstance(DEFAULT_LOGLEVEL, DEFAULT_LOGTARGET, buffer);
 #endif
 	numleds_ = numleds;
-	ledsA_[numleds];
+	crgbleds_[numleds];
 }
 
 //Destructor
 Neopixel::~Neopixel()
 {
+}
+
+/// <summary>
+/// set event (value) which should sent to the actor
+/// </summary>
+/// <param name="newevent">event type, which can hold a voltage value, voltage = int * (5.0 / 1023)</param>
+/// <returns>true if no error</returns>
+bool Neopixel::setEvent(actor_event newevent)
+{
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - Neopixel - setEvent";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
+	event = newevent;
+	return true;
+}
+
+
+/// <summary>
+/// fire event like before written to event var
+/// </summary>
+/// <returns>true if value got updated, else false</returns>
+bool Neopixel::fireEvent()
+{
+#ifdef DEBUG
+	static const char* const buffer PROGMEM = "Call - Neopixel - fireEvent";
+	logger_g_->LnWriteLog(buffer, extremedebug);
+#endif
+
+	switch (event.neopixel.effect_type)
+	{
+	case EFFECT_SET_HUE:			setHue(event.neopixel.led, event.neopixel.CHSV.hue);
+	case EFFECT_SET_SAT:			setSaturation(event.neopixel.led, event.neopixel.CHSV.sat);
+	case EFFECT_SET_VAL:			setBrightness(event.neopixel.led, event.neopixel.CHSV.val);
+	case EFFECT_SET_R:				return false; // TODO
+	case EFFECT_SET_G:				return false; // TODO
+	case EFFECT_SET_B:				return false; // TODO
+	case EFFECT_SET_HSV:			setValues(event.neopixel.led, event.neopixel.CHSV.hue, event.neopixel.CHSV.sat, event.neopixel.CHSV.val);
+	case EFFECT_SET_RGB:			return false; // TODO
+	case EFFECT_COLORSHIFT:			colorshift(event.neopixel.var.colorshift.direction, event.neopixel.var.colorshift.sensorResult);
+	case EFFECT_FADE_2_COLOR:		return false; // TODO
+	case EFFECT_FADE_BRIGHTNESS:	return false; // TODO
+	default: return false;
+	}
+	return true;
 }
 
 // Initialisierung
@@ -45,15 +83,13 @@ CRGB* Neopixel::InitNeoPixel(byte brightness, byte saturation)
 	LEDS.clear();
 	LEDS.clearData();
 	LEDS.setBrightness(brightness_);
-	LEDS.setBrightness(saturation_);
 	for (byte element = 0;element <= numleds_; element++)
 	{
-		a_saturation_[element] = saturation_;
-		a_brightness_[element] = brightness_;
+		chsvleds_[element] = CHSV(hue_, saturation_, brightness_);
 	}
-	LEDS.addLeds<WS2812B, PIN_WS2812_1, GRB>(ledsA_, numleds_);
-	memset(ledsA_, 0, numleds_ * sizeof(struct CRGB));
-	return ledsA_;
+	LEDS.addLeds<WS2812B, PIN_WS2812_1, GRB>(crgbleds_, numleds_);
+	memset(crgbleds_, 0, numleds_ * sizeof(struct CRGB));
+	return crgbleds_;
 }
 
 // Sendet berechnete Werte an LEDs und internen Zustandsvariablen. 
@@ -61,39 +97,37 @@ void Neopixel::setAllLikeInput(short led)
 {
 	if (led != -1)
 	{
-		ledsA_[led]			= CHSV(hue_, saturation_, brightness_);
-		a_hue_[led]			= hue_;
-		a_saturation_[led]	= saturation_;
-		a_brightness_[led]	= brightness_;
+		crgbleds_[led] = CHSV(hue_, saturation_, brightness_);
+		chsvleds_[led] = CHSV(hue_, saturation_, brightness_);
 	}
 	else
 	{
 		for (byte element = 0;element <= numleds_; element++)
 		{
-			ledsA_[element] = CHSV(hue_, saturation_, brightness_);
-			a_hue_[element]			= hue_;
-			a_saturation_[element]	= saturation_;
-			a_brightness_[element]	= brightness_;
+			crgbleds_[element] = CHSV(hue_, saturation_, brightness_);
+			chsvleds_[element] = CHSV(hue_, saturation_, brightness_);
 		}
 	}
 	LEDS.show();
 }
 
-void Neopixel::setAllLikeInputArray(short led)
-{
-	if (led != -1)
-	{
-		ledsA_[led] = CHSV(a_hue_[led], a_saturation_[led], a_brightness_[led]);
-	}
-	else
-	{
-		for (byte element = 0;element <= numleds_; element++)
-		{
-			ledsA_[element] = CHSV(a_hue_[element], a_saturation_[element], a_brightness_[element]);
-		}
-	}
-	LEDS.show();
-}
+//void Neopixel::setAllLikeInputArray(short led)
+//{
+//	if (led != -1)
+//	{
+//		crgbleds_[led] = CHSV(a_hue_[led], a_saturation_[led], a_brightness_[led]);
+//		chsvleds_[led] = CHSV(a_hue_[led], a_saturation_[led], a_brightness_[led]);
+//	}
+//	else
+//	{
+//		for (byte element = 0;element <= numleds_; element++)
+//		{
+//			crgbleds_[element] = CHSV(a_hue_[element], a_saturation_[element], a_brightness_[element]);
+//			chsvleds_[element] = CHSV(a_hue_[element], a_saturation_[element], a_brightness_[element]);
+//		}
+//	}
+//	LEDS.show();
+//}
 
 // Legt alle Werte fest
 // wird led "-1" übergeben werden alle geschalten, wird eine bestimmte Zahl mitgegeben wird eine LED geschalten.
@@ -104,7 +138,7 @@ bool Neopixel::setValues(short led, byte hue, byte saturation, byte brightness)
 	logger_g_->LnWriteLog(buffer, extremedebug);
 #endif
 
-	if (saturation_ != saturation || hue_ != hue || brightness_ != brightness)
+	if (chsvleds_->saturation != saturation || hue_ != hue || brightness_ != brightness)
 	{
 		if (saturation_ != saturation)
 		{
@@ -258,11 +292,11 @@ void Neopixel::fadeToTargetColor(short led, byte hue)
 		logger_g_->LnWriteLog(buffer, extremedebug);
 	}
 #endif
-	if (hue != previousColor_)
+	if (hue != previous_hue_)
 	{
-		if (fromblubb_ < blubb_)
+		if (from_huecount_ < to_huecount_)
 		{
-			for (byte i = fromblubb_;i <= blubb_; i++)
+			for (byte i = from_huecount_;i <= to_huecount_; i++)
 			{
 #ifdef DEBUG
 				if (logger_g_->GetLogLevel() >= extremedebug)
@@ -282,14 +316,14 @@ void Neopixel::fadeToTargetColor(short led, byte hue)
 						logger_g_->WriteLog(element, extremedebug);
 					}
 #endif
-					ledsA_[element] = CHSV(i, 255, 255);
+					crgbleds_[element] = CHSV(i, saturation_, brightness_);
+					chsvleds_[element] = CHSV(i, saturation_, brightness_);
 				}
-
 			}
 		}
 		else
 		{
-			for (byte i = fromblubb_;i >= blubb_; i--)
+			for (byte i = from_huecount_;i >= to_huecount_; i--)
 			{
 #ifdef DEBUG
 				if (logger_g_->GetLogLevel() >= extremedebug)
@@ -309,12 +343,13 @@ void Neopixel::fadeToTargetColor(short led, byte hue)
 						logger_g_->WriteLog(element, extremedebug);
 					}
 #endif
-					ledsA_[element] = CHSV(i, 255, 255);
+					crgbleds_[element] = CHSV(i, saturation_, brightness_);
+					chsvleds_[element] = CHSV(i, saturation_, brightness_);
 				}
 			}
 		}
-		fromblubb_ = blubb_;
-		previousColor_ = colorium_;
+		from_huecount_ = to_huecount_;
+		previous_hue_ = colorium_;
 	}
 	setHue(led, lightcounter_);
 }
@@ -342,9 +377,10 @@ void Neopixel::colorshift(short direction, bool sensorResult)
 #endif
 			for (byte i = 0;i < numleds_; i++)
 			{
-				ledsA_[i] = CHSV(i*numstops_ + i_hue_, saturation_, brightness_);
+				crgbleds_[i] = CHSV(i * numstops_ + i_hue_, saturation_, brightness_);
+				chsvleds_[i] = CHSV(i * numstops_ + i_hue_, saturation_, brightness_);
 				i_hue_ += i_step_;
-				a_hue_[i] = i_hue_;
+				chsvleds_[i].hue = i_hue_;
 				if (i_hue_ >= 255)
 				{
 					i_hue_ = 0;
@@ -362,9 +398,10 @@ void Neopixel::colorshift(short direction, bool sensorResult)
 #endif
 			for (byte i = numleds_;i > 0; i--)
 			{
-				ledsA_[i] = CHSV(i*numstops_ + i_hue_, saturation_, brightness_);
+				crgbleds_[i] = CHSV(i * numstops_ + i_hue_, saturation_, brightness_);
+				chsvleds_[i] = CHSV(i * numstops_ + i_hue_, saturation_, brightness_);
 				i_hue_ -= i_step_;
-				a_hue_[i] = i_hue_;
+				chsvleds_[i].hue = i_hue_;
 				if (i_hue_ <= 0)
 				{
 					i_hue_ = 255;
@@ -376,7 +413,8 @@ void Neopixel::colorshift(short direction, bool sensorResult)
 	{
 		for (int i = 0;i < numleds_; i++)
 		{
-			ledsA_[i] = CHSV(0, 0, 0);
+			crgbleds_[i] = CHSV(0, 0, 0);
+			chsvleds_[i] = CHSV(0, 0, 0);
 		}
 	}
 #ifdef DEBUG
@@ -407,460 +445,6 @@ void Neopixel::twinkleRandom(short chosenColor, boolean OnlyOne)
 		setValues(-1, 0, 0, 0);
 	}
 }
-
-// Nötig damit der Zustand des Effekts randomPulse resettiert wird. Danach ist der Zustand von randomPulse gleichbedeutend als wäre randomPulse noch nie aufgerufen worden.
-void Neopixel::InitExitRandomPulse()
-{
-#ifdef DEBUG
-	if (logger_g_->GetLogLevel() >= extremedebug)
-	{
-		static const char* const buffer PROGMEM = "Call - RP InitExitRandomPulse";
-		logger_g_->LnWriteLog(buffer, extremedebug);
-	}
-#endif
-	erster_aufruf_von_rp_ = true;
-
-	for (byte i = 0; i <= numleds_; i++) {
-		dunkel_[i][0] = 0;
-		dunkel_[i][1] = 0;
-		dunkel_[i][2] = min_helligkeit_;
-		hell_[i][0] = 0;
-		hell_[i][1] = 0;
-		hell_[i][2] = max_helligkeit_;
-		aufhellen_[i][0] = 0;
-		aufhellen_[i][1] = 0;
-		abdunkeln_[i][0] = 0;
-		abdunkeln_[i][1] = 0;
-	}
-}
-
-// Prüft anhand der in den randomPulse Arrays hinterlegten schaltern (1/0) ob randomPulse zum ersten mal aufgerufen wurde. Ist nur ein einzelner Schalter auf 1 wurde RP bereits aufgerufen.
-bool Neopixel::RP_CheckObErsterAufrufVonRandomPulse()
-{
-#ifdef DEBUG
-	if (logger_g_->GetLogLevel() >= extremedebug)
-	{
-		static const char* const buffer PROGMEM = "Call - RP_1stRandomPulseCall";
-		logger_g_->LnWriteLog(buffer, extremedebug);
-	}
-#endif
-	byte checkSchalter = 0;
-
-	if (erster_aufruf_von_rp_)
-	{
-		return true;
-	}
-	for (byte i = 0; i <= numleds_; i++) {
-		checkSchalter = dunkel_[i][0];
-		checkSchalter = hell_[i][0];
-		checkSchalter = abdunkeln_[i][0];
-		checkSchalter = aufhellen_[i][0];
-
-		if (checkSchalter == 1)
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-bool Neopixel::RP_CheckTimeMoment()
-{
-	int timing = max_helligkeit_ - min_helligkeit_ / timing_ * 1000;
-
-	if (millis() - startzeit_ >= timing)
-	{
-		startzeit_ = millis();
-		return true;
-	}
-	return false;
-}
-
-// Es werden die aktuellen Lichtwerte ausgelesen und in die Arrays für randomPulse geladen. 
-// Dies gewährleistet einen flüssigen Übergang beim wechsel zum Effekt randomPulse
-void Neopixel::RP_SetzeInitialWerteInArrays()
-{
-#ifdef DEBUG
-	if (logger_g_->GetLogLevel() >= extremedebug)
-	{
-		static const char* const buffer PROGMEM = "Call - RP Setze Initial Werte";
-		logger_g_->LnWriteLog(buffer, extremedebug);
-	}
-#endif
-	for (byte i = 0; i <= numleds_; i++) {
-		if (a_brightness_[i] <= min_helligkeit_) // Leds welche dünkler sind als min_helligkeit_ werden im nächsten Zyklus in aufhellen_ gelegt und damit heller geschalten.
-		{
-			dunkel_[i][0] = 1;
-			dunkel_[i][1] = 0;
-			dunkel_[i][2] = a_brightness_[i];
-		}
-
-		if (a_brightness_[i] >= max_helligkeit_) // Leds welche heller sind als max_helligkeit_ werden im nächsten Zyklus in abdunkeln_ gelegt und damit dünkler geschalten.
-		{
-			hell_[i][0] = 1;
-			hell_[i][1] = 0;
-			hell_[i][2] = a_brightness_[i];
-		}
-
-		if (a_brightness_[i] > min_helligkeit_ && a_brightness_[i] < max_helligkeit_) // Leds welche zwischen min_helligkeit_ und max_helligkeit_ liegen werden im nächsten Zyklus zufällig heller oder dünkler geschalten.
-		{
-			byte rand = random8(0, 1);
-			if (rand == 1)
-			{
-				aufhellen_[i][0] = 1;
-				aufhellen_[i][1] = a_brightness_[i];
-			}
-			else
-			{
-				abdunkeln_[i][0] = 1;
-				abdunkeln_[i][1] = a_brightness_[i];
-			}
-		}
-	}
-}
-
-// Stellt das ene eines Zykluses dar und
-void Neopixel::RP_InDekrementiereLEDArrays()
-{
-#ifdef DEBUG
-	if (logger_g_->GetLogLevel() >= extremedebug)
-	{
-		static const char* const buffer PROGMEM = "Call - RP InDekrementiere";
-		logger_g_->LnWriteLog(buffer, extremedebug);
-	}
-#endif
-	for (byte i = 0; i <= numleds_; i++) {
-		if (hell_[i][0] == 1)
-		{
-#ifdef DEBUG
-			if (logger_g_->GetLogLevel() >= debug)
-			{
-				static const char* const buffer PROGMEM = "hell_: ";
-				logger_g_->LnWriteLog(buffer, debug);
-				logger_g_->WriteLog(hell_[i][1], debug);
-			}
-#endif
-			hell_[i][1] = hell_[i][1] + 1;
-		}
-		if (dunkel_[i][0] == 1)
-		{
-#ifdef DEBUG
-			if (logger_g_->GetLogLevel() >= debug)
-			{
-				static const char* const buffer PROGMEM = "dunkel_: ";
-				logger_g_->LnWriteLog(buffer, debug);
-				logger_g_->WriteLog(dunkel_[i][1], debug);
-			}
-#endif
-			dunkel_[i][1] = dunkel_[i][1] + 1;
-		}
-		if (aufhellen_[i][0] == 1)
-		{
-#ifdef DEBUG
-			if (logger_g_->GetLogLevel() >= debug)
-			{
-				static const char* const buffer PROGMEM = "aufhellen_: ";
-				logger_g_->LnWriteLog(buffer, debug);
-				logger_g_->WriteLog(aufhellen_[i][1], debug);
-			}
-#endif
-			aufhellen_[i][1] = aufhellen_[i][1] + DEFAULT_NEOPIXEL_Inkrement;
-		}
-		if (abdunkeln_[i][0] == 1)
-		{
-#ifdef DEBUG
-			if (logger_g_->GetLogLevel() >= debug)
-			{
-				static const char* const buffer PROGMEM = "abdunkeln_: ";
-				logger_g_->LnWriteLog(buffer, debug);
-				logger_g_->WriteLog(abdunkeln_[i][1], debug);
-			}
-#endif
-			abdunkeln_[i][1] = abdunkeln_[i][1] - DEFAULT_NEOPIXEL_Dekrement;
-		}
-
-	}
-}
-
-byte Neopixel::RP_Fibanagi(byte before, byte last)
-{
-	return before + last;
-}
-
-// Stellt das ene eines Zykluses dar und
-void Neopixel::RP_SetzeBerechneteLichtwerte()
-{
-#ifdef DEBUG
-	if (logger_g_->GetLogLevel() >= extremedebug)
-	{
-		static const char* const buffer PROGMEM = "Call - RP Setze Lichtwerte";
-		logger_g_->LnWriteLog(buffer, extremedebug);
-	}
-#endif
-	for (byte i = 0; i <= numleds_; i++) {
-		if (hell_[i][0] == 1)
-		{
-			a_brightness_[i] = hell_[i][2];
-		}
-		if (dunkel_[i][0] == 1)
-		{
-			a_brightness_[i] = dunkel_[i][2];
-		}
-		if (aufhellen_[i][0] == 1)
-		{
-			a_brightness_[i] = aufhellen_[i][1];
-		}
-		if (abdunkeln_[i][0] == 1)
-		{
-			a_brightness_[i] = abdunkeln_[i][1];
-		}
-	}
-}
-
-void Neopixel::RP_ProzessDunkel()
-{
-#ifdef DEBUG
-	if (logger_g_->GetLogLevel() >= extremedebug)
-	{
-		static const char* const buffer PROGMEM = "Call - RP ProzessDunkel";
-		logger_g_->LnWriteLog(buffer, extremedebug);
-	}
-#endif
-	for (byte i = 0; i <= numleds_; i++) {
-
-		if (RP_CheckObMaxHellOderDunkelZyklusErreicht(i, "dunkel")) // Leds welche max_hell_zyklen_ Zyklen Hell waren werden in abdunkeln_ gelegt und damit dünkler geschalten.
-		{
-			dunkel_[i][0] = 0;
-			dunkel_[i][1] = 0;
-			dunkel_[i][2] = min_helligkeit_;
-			aufhellen_[i][0] = 1;
-			aufhellen_[i][1] = dunkel_[i][2];
-		}
-	}
-}
-
-void Neopixel::RP_ProzessAufhellen()
-{
-#ifdef DEBUG
-	if (logger_g_->GetLogLevel() >= extremedebug)
-	{
-		static const char* const buffer PROGMEM = "Call - RP ProzessAufhellen";
-		logger_g_->LnWriteLog(buffer, extremedebug);
-	}
-#endif
-	for (byte i = 0; i <= numleds_; i++) {
-
-		if (RP_CheckObMaxHellOderDunkelWertErreicht(i, "aufhellen")) // Leds welche max_hell_zyklen_ Zyklen Hell waren werden in abdunkeln_ gelegt und damit dünkler geschalten.
-		{
-			aufhellen_[i][0] = 0;
-			aufhellen_[i][1] = min_helligkeit_;
-			hell_[i][0] = 1;
-			hell_[i][1] = 0;
-			hell_[i][2] = aufhellen_[i][1];
-		}
-	}
-}
-
-void Neopixel::RP_ProzessHell()
-{
-#ifdef DEBUG
-	if (logger_g_->GetLogLevel() >= extremedebug)
-	{
-		static const char* const buffer PROGMEM = "Call - RP ProzessHell";
-		logger_g_->LnWriteLog(buffer, extremedebug);
-	}
-#endif
-	for (byte i = 0; i <= numleds_; i++) {
-
-		if (RP_CheckObMaxHellOderDunkelZyklusErreicht(i, "hell")) // Leds welche max_hell_zyklen_ Zyklen Hell waren werden in abdunkeln_ gelegt und damit dünkler geschalten.
-		{
-			hell_[i][0] = 0;
-			hell_[i][1] = 0;
-			hell_[i][2] = max_helligkeit_;
-			abdunkeln_[i][0] = 1;
-			abdunkeln_[i][1] = hell_[i][2];
-		}
-	}
-}
-
-void Neopixel::RP_ProzessAbdunkeln()
-{
-#ifdef DEBUG
-	if (logger_g_->GetLogLevel() >= extremedebug)
-	{
-		static const char* const buffer PROGMEM = "Call - RP ProzessAbdunkeln";
-		logger_g_->LnWriteLog(buffer, extremedebug);
-	}
-#endif
-	for (byte i = 0; i <= numleds_; i++) {
-
-		if (RP_CheckObMaxHellOderDunkelWertErreicht(i, "abdunkeln")) // Leds welche max_hell_zyklen_ Zyklen Hell waren werden in abdunkeln_ gelegt und damit dünkler geschalten.
-		{
-			abdunkeln_[i][0] = 0;
-			abdunkeln_[i][1] = max_helligkeit_;
-			dunkel_[i][0] = 1;
-			dunkel_[i][1] = 0;
-			dunkel_[i][2] = abdunkeln_[i][1];
-		}
-	}
-}
-
-// Prüft ob die Zyklusschwelle um das Led dunkel oder Hell zu schalten bereist erreicht ist.
-// Parameter: "zeile" übergibt die Zeile welche geprüft wird. Wird in "helldunkel" "hell" übergeben wird auf Hellzyklus geprüft wird "dunkel" übergeben wird auf Dunkelzyklus geprüft.
-bool Neopixel::RP_CheckObMaxHellOderDunkelZyklusErreicht(byte zeile, String helldunkel)
-{
-	if (helldunkel == "hell")
-	{
-		if (hell_[zeile][1] >= max_hell_zyklen_ && hell_[zeile][0] == 1) // Leds welche max_hell_zyklen_ Zyklen Hell waren werden in abdunkeln_ gelegt und damit dünkler geschalten.
-		{
-			return true;
-		}
-	}
-	if (helldunkel == "dunkel")
-	{
-		if (dunkel_[zeile][1] >= max_dunkel_zyklen_ && dunkel_[zeile][0] == 1) // Leds welche max_dunkel_zyklen_ Zyklen Dunkel waren werden in aufhellen_ gelegt und damit heller geschalten.
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-bool Neopixel::RP_CheckObMaxHellOderDunkelWertErreicht(byte zeile, String aufhellabdunkel)
-{
-	if (aufhellabdunkel == "aufhellen")
-	{
-		if (aufhellen_[zeile][1] >= max_helligkeit_ && aufhellen_[zeile][0] == 1) // Leds welche max_hell_zyklen_ Zyklen Hell waren werden in abdunkeln_ gelegt und damit dünkler geschalten.
-		{
-			return true;
-		}
-	}
-	if (aufhellabdunkel == "abdunkeln")
-	{
-		if (abdunkeln_[zeile][1] <= min_helligkeit_ && abdunkeln_[zeile][0] == 1) // Leds welche max_dunkel_zyklen_ Zyklen Dunkel waren werden in aufhellen_ gelegt und damit heller geschalten.
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-// Es wird ein Anteil an Leds gewählt welcher zufällig im nächsten Zyklus Heller oder DUnkle rgeschaltenm wird gewählt.
-// Der die Konstanten "anteil_leds_zum_abdunkeln_" und "anteil_leds_zum_aufhellen_" stellen den Divisor dar, die Leds welche derzeit Hell oder Dunkel sind stellen den Dividenden dar. 
-void Neopixel::RP_WaehleLedAnteilZumHellOderDunkelSchalten(String helldunkel)
-{
-#ifdef DEBUG
-	if (logger_g_->GetLogLevel() >= extremedebug)
-	{
-		static const char* const buffer PROGMEM = "Call - RP Led Anteil";
-		logger_g_->LnWriteLog(buffer, extremedebug);
-	}
-#endif
-	byte ledarray[NUM_LEDS_1]	= {0};
-	byte countLedsWelcheOn	= 0;
-	byte anteilLeds			= 0;
-	byte x					= 0;
-	byte led				= 0;
-
-	if (helldunkel == "hell")
-	{
-		for (byte i = 0; i <= numleds_; i++) {
-			if (hell_[i][0] == 1)
-			{
-				ledarray[countLedsWelcheOn] = i;
-				countLedsWelcheOn++;
-			}
-		}
-		anteilLeds = round(countLedsWelcheOn / anteil_leds_zum_abdunkeln_);
-		while (x <= anteilLeds)
-		{
-			led = ledarray[random8(countLedsWelcheOn)];
-			hell_[led][1] = max_hell_zyklen_;
-			x++;
-#ifdef DEBUG
-			if (logger_g_->GetLogLevel() >= extremedebug)
-			{
-				static const char* const buffer PROGMEM = "ledarray: ";
-				logger_g_->LnWriteLog(buffer, debug);
-				logger_g_->WriteLog(led, debug);
-			}
-#endif
-		}
-	}
-
-	if (helldunkel == "dunkel")
-	{
-		for (byte i = 0; i <= numleds_; i++) {
-			if (dunkel_[i][0] == 1)
-			{
-				ledarray[countLedsWelcheOn] = i;
-				countLedsWelcheOn++;
-			}
-		}
-		anteilLeds = round(countLedsWelcheOn / anteil_leds_zum_aufhellen_);
-
-		while (x <= anteilLeds)
-		{
-			led = ledarray[random8(countLedsWelcheOn)];
-			dunkel_[led][1] = max_dunkel_zyklen_;
-			x++;
-#ifdef DEBUG
-			if (logger_g_->GetLogLevel() >= extremedebug)
-			{
-				static const char* const buffer PROGMEM = "ledarray: ";
-				logger_g_->LnWriteLog(buffer, debug);
-				logger_g_->WriteLog(led, debug);
-			}
-#endif
-		}
-	}
-}
-
-// Effekt randomPulse: Lässt jenachdem wieviele leds konfigurioert sind diese in zufälligen Mustern Pulsieren.
-// Jedes LED wird also smooth heller und dünkler geschalten aber jedes einzelne Led zufällig.
-// Die Funktion arbeitet Zyklisch d.h. Jeder Aufruf der Funktion stellt einen Zyklus dar und die lichter werden um einen Helligkeitsgrad dünkler oder heller geschalten.
-void Neopixel::randomPulse()
-{
-#ifdef DEBUG
-	if (logger_g_->GetLogLevel() >= extremedebug)
-	{
-		static const char* const buffer PROGMEM = "Call - randomPulse";
-		logger_g_->LnWriteLog(buffer, extremedebug);
-	}
-#endif
-	// Prüfe ob erster Aufruf von RP
-	if (RP_CheckObErsterAufrufVonRandomPulse())
-	{
-#ifdef DEBUG
-		if (logger_g_->GetLogLevel() >= debug)
-		{
-			static const char* const buffer PROGMEM = "RP: Erster Aufruf";
-			logger_g_->LnWriteLog(buffer, debug);
-		}
-#endif
-		RP_SetzeInitialWerteInArrays();
-		erster_aufruf_von_rp_ = false;
-	}
-	//Dunkler Zyklus
-	RP_WaehleLedAnteilZumHellOderDunkelSchalten("dunkel");
-	RP_ProzessDunkel();
-	//Aufhellen Zyklus
-	RP_ProzessAufhellen();
-	//Hell Zyklus
-	RP_WaehleLedAnteilZumHellOderDunkelSchalten("hell");
-	RP_ProzessHell();
-	//Abdunkeln Zyklus
-	RP_ProzessAbdunkeln();
-	//Inkrementiere alle Arrays
-	RP_InDekrementiereLEDArrays();
-	RP_SetzeBerechneteLichtwerte();
-	setAllLikeInputArray(-1);
-}
-
-
-
-
-
 
 	/*
 	switch (selectedEffect) {

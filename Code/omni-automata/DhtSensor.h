@@ -19,7 +19,7 @@ class DhtSensor :public Sensor
 	float hum_;
 	float savetemp_;
 	float savehum_;
-	DHT dht_ = DHT(getPin(),DHT22);
+	DHT dht_ = DHT(getPin().eins.pin1,DHT22);
 	logger* logger_g_;
 
 public:

@@ -112,6 +112,15 @@
     <ClInclude Include="__vm\.omni-automata.vsarduino.h">
       <Filter>Files\Solution</Filter>
     </ClInclude>
+    <ClInclude Include="IActor.h">
+      <Filter>Files\InOut\actors</Filter>
+    </ClInclude>
+    <ClInclude Include="ISensor.h">
+      <Filter>Files\InOut\sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="Neopixel_RandomPulse.h">
+      <Filter>Files\InOut\actors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp">
@@ -170,6 +179,9 @@
     </ClCompile>
     <ClCompile Include="Decisions.cpp">
       <Filter>Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Neopixel_RandomPulse.cpp">
+      <Filter>Files\InOut\actors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

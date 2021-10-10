@@ -15,10 +15,6 @@
 class DirectionEncoder final : public Sensor
 {
 private:
-
-	byte	pinCLK_;	// Connected to CLK on KY-040
-	byte	pinDT_;		// Connected to DT on KY-040
-	byte	pinSW_;		// Connected to SW on KY-040
 	int		encoder_pos_count_ = 0;
 	byte	old_clk_val_;
 	byte	clk_val_;
@@ -33,7 +29,7 @@ private:
 	logger* logger_g_;
 
 public:
-	DirectionEncoder(char n[], int pSW, int pCLK, int pDT);
+	DirectionEncoder(char n[], unsigned short pSW, unsigned short pCLK, unsigned short pDT);
 	~DirectionEncoder();
 	int getEncoderValue();			// Method: get encoder Value
 	bool getValue();				// Method: get switch Value
