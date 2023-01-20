@@ -8,9 +8,6 @@
     <Filter Include="Files\InOut">
       <UniqueIdentifier>{9ee66255-9a36-4b82-9193-32cffacc2b60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Files\InOut\sensors">
-      <UniqueIdentifier>{60317baf-2a47-440b-8713-ce917e86c2a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Files\InOut\actors">
       <UniqueIdentifier>{33c12b8a-d698-475f-8caf-f6b74e91d946}</UniqueIdentifier>
     </Filter>
@@ -25,6 +22,9 @@
     </Filter>
     <Filter Include="Files\Solution">
       <UniqueIdentifier>{28f65b4d-7e4e-4d13-b64a-1a25115ed295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Files\InOut\sensors">
+      <UniqueIdentifier>{60317baf-2a47-440b-8713-ce917e86c2a4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
